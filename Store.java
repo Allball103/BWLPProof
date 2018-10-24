@@ -3,16 +3,13 @@ import java.util.ArrayList;
 // Defines the Store class
 public class Store{
     // The lines the grocery store has (normal)
-    ArrayList<Customer> lineOne;
-    ArrayList<Customer> lineTwo;
-    ArrayList<Customer> lineThree;
-    ArrayList<Customer> lineFour;
+    ArrayList<ArrayList<Customer>> lines;
 
     // Single line that goes to others
     ArrayList<Customer> airportLine;
 
     // 15 items or fewer line
-    ArrayList<Customer> fifteenOrLess;
+    ArrayList<Customer> fiveOrLess;
 
     // Time of the day
     int time;
