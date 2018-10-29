@@ -23,6 +23,15 @@ public class Item{
     }
 
     // Setters
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
 
+    public void setCheckOutTime(int checkOutTime) {
+        this.checkOutTime = checkOutTime;
+    }
 
+    public void setImpulseValue(int impulseValue) {
+        this.impulseValue = impulseValue;
+    }
 }
