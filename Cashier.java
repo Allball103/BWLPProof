@@ -5,4 +5,15 @@ public class Cashier{
 
     // If there is a customer at their register
     boolean customerAtRegister;
+
+    // Getters
+    int getCheckOutSpeed(){
+        return checkOutSpeed;
+    }
+
+    boolean getCustomerAtRegister(){
+        return customerAtRegister;
+    }
+
+    // Setters
 }

@@ -21,4 +21,27 @@ public class Store{
     enum dayOfWeek {
         Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
     }
+
+    // Getters
+    ArrayList<ArrayList<Customer>> getLines(){
+        return lines;
+    }
+
+    ArrayList<Customer> getAirportLine(){
+        return airportLine;
+    }
+
+    ArrayList<Customer> getFiveOrLess(){
+        return fiveOrLess;
+    }
+
+    int getTime(){
+        return time;
+    }
+
+    int getBusyness(){
+        return busyness;
+    }
+
+    // Setters
 }

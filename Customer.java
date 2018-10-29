@@ -5,4 +5,15 @@ public class Customer{
 
     // Percentage chance the customer leaves
     int impatienceFactor;
+
+    // Getters
+    int getItemsInCart(){
+        return itemsInCart;
+    }
+
+    int getImpatienceFactor(){
+        return impatienceFactor;
+    }
+
+    // Setters
 }
