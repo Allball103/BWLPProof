@@ -16,4 +16,11 @@ public class Customer{
     }
 
     // Setters
+    public void setImpatienceFactor(int impatienceFactor) {
+        this.impatienceFactor = impatienceFactor;
+    }
+
+    public void setItemsInCart(int itemsInCart) {
+        this.itemsInCart = itemsInCart;
+    }
 }

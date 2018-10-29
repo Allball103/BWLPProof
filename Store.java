@@ -44,4 +44,23 @@ public class Store{
     }
 
     // Setters
+    public void setLines(ArrayList<ArrayList<Customer>> lines) {
+        this.lines = lines;
+    }
+
+    public void setAirportLine(ArrayList<Customer> airportLine) {
+        this.airportLine = airportLine;
+    }
+
+    public void setFiveOrLess(ArrayList<Customer> fiveOrLess) {
+        this.fiveOrLess = fiveOrLess;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public void setBusyness(int busyness) {
+        this.busyness = busyness;
+    }
 }

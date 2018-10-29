@@ -16,4 +16,11 @@ public class Cashier{
     }
 
     // Setters
+    public void setCheckOutSpeed(int checkOutSpeed) {
+        this.checkOutSpeed = checkOutSpeed;
+    }
+
+    public void setCustomerAtRegister(boolean customerAtRegister) {
+        this.customerAtRegister = customerAtRegister;
+    }
 }
