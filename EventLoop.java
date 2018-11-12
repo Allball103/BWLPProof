@@ -13,6 +13,11 @@ import java.awt.*;
 
 public class EventLoop extends Application {
 
+    String cashierNum;
+    String arrivalInt;
+    String itemsNum;
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -33,17 +38,17 @@ public class EventLoop extends Application {
         Label labelArrive = new Label("Mean Customer Arrival Interval: ");
 
         ComboBox comboBoxArrive = new ComboBox();
-        comboBoxArrive.getItems().add("1");
-        comboBoxArrive.getItems().add("2");
-        comboBoxArrive.getItems().add("3");
+        for (int i = 0; i < 11; i++) {
+            comboBoxArrive.getItems().add(i);
+        }
         comboBoxArrive.getSelectionModel().selectFirst();
 
         // Average Number of Items /////////////////////////////////////////////////////////////////////////////////////
         Label labelItems = new Label("Average Number of Items: ");
 
         ComboBox comboBoxItems = new ComboBox();
-        for (int i=0; i < 100; i++) {
-            comboBoxItems.getItems().add(i);
+        for (int t = 0; t < 101; t++) {
+            comboBoxItems.getItems().add(t);
         }
         comboBoxItems.getSelectionModel().selectFirst();
 
@@ -57,16 +62,27 @@ public class EventLoop extends Application {
         HBox hbox3 = new HBox(labelItems, comboBoxItems);
         HBox hbox4 = new HBox(buttonReset, buttonStart);
 
+        buttonStart.setOnAction(actionEvent ->  {
+
+            cashierNum = comboBoxCash.getValue().toString();
+            arrivalInt = comboBoxArrive.getValue().toString();
+            itemsNum = comboBoxItems.getValue().toString();
+
+
+            System.out.println("Number of Cashiers: " + cashierNum);
+            System.out.println("Mean Customer Arrival Interval: " + arrivalInt);
+            System.out.println("Average Number of Items: " +  itemsNum);
+
+
+            // RUN SIMULATION CODE HERE //
+
+        });
+
         VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4);
 
         Scene scene = new Scene(vbox, 500, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-//        String value = (String) comboBox.getValue();
-
-//        System.out.println(value);
-
     }
 
     public static void main(String[] args) {
