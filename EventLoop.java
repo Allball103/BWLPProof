@@ -5,7 +5,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import java.awt.*;
 
@@ -13,27 +15,59 @@ public class EventLoop extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        // App window title
         primaryStage.setTitle("Welcome to the Grocery Store Simulator");
 
-        Label label = new Label("Number of Cashiers: ");
-        
-        ComboBox comboBox = new ComboBox();
+        // Number of Cashiers //////////////////////////////////////////////////////////////////////////////////////////
+        Label labelCash = new Label("Number of Cashiers: ");
 
-        comboBox.getItems().add("1 Cashier");
-        comboBox.getItems().add("2 Cashiers");
-        comboBox.getItems().add("3 Cashiers");
+        // Number of Cashiers Dropdown
+        ComboBox comboBoxCash = new ComboBox();
+        comboBoxCash.getItems().add("1 Cashier");
+        comboBoxCash.getItems().add("2 Cashiers");
+        comboBoxCash.getItems().add("3 Cashiers");
+        comboBoxCash.getSelectionModel().selectFirst();
 
-        // Set default value to 1 Cashier
-        comboBox.getSelectionModel().selectFirst();
+        // Mean Customer Arrival Interval //////////////////////////////////////////////////////////////////////////////
+        Label labelArrive = new Label("Mean Customer Arrival Interval: ");
 
-        HBox hbox = new HBox(label, comboBox);
+        ComboBox comboBoxArrive = new ComboBox();
+        comboBoxArrive.getItems().add("1");
+        comboBoxArrive.getItems().add("2");
+        comboBoxArrive.getItems().add("3");
+        comboBoxArrive.getSelectionModel().selectFirst();
 
-        Scene scene = new Scene(hbox, 500, 500);
+        // Average Number of Items /////////////////////////////////////////////////////////////////////////////////////
+        Label labelItems = new Label("Average Number of Items: ");
+
+        ComboBox comboBoxItems = new ComboBox();
+        for (int i=0; i < 100; i++) {
+            comboBoxItems.getItems().add(i);
+        }
+        comboBoxItems.getSelectionModel().selectFirst();
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        Button buttonReset = new Button("Reset Simulation");
+        Button buttonStart = new Button("Start Simulation");
+
+        HBox hbox1 = new HBox(labelCash, comboBoxCash);
+        HBox hbox2 = new HBox(labelArrive, comboBoxArrive);
+        HBox hbox3 = new HBox(labelItems, comboBoxItems);
+        HBox hbox4 = new HBox(buttonReset, buttonStart);
+
+        VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4);
+
+        Scene scene = new Scene(vbox, 500, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
 
-    }
+//        String value = (String) comboBox.getValue();
 
+//        System.out.println(value);
+
+    }
 
     public static void main(String[] args) {
         launch(args);
