@@ -23,4 +23,14 @@ public class Cashier{
     public void setCustomerAtRegister(boolean customerAtRegister) {
         this.customerAtRegister = customerAtRegister;
     }
+
+    //determines the time it will take the cashier to check the current customer out
+    public int checkout(Customer c){
+        //stretch goal; different items will have different check out speeds
+        int time = c.itemsInCart * checkOutSpeed;
+        return time;
+    }
+
+    //stretch goal
+    public void scanItem(){}
 }
