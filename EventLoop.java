@@ -1,4 +1,3 @@
-package sample;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,14 +8,21 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+
+import java.util.PriorityQueue;
 import java.awt.*;
 
 public class EventLoop extends Application {
 
+    enum Event
+    {
+        CUSTOMER_ARRIVES_IN_STORE, CUSTOMER_READY_FOR_CHECKOUT, CUSTOMER_FINISHES_CHECKOUT, CUSTOMER_ABANDONS_LINE;
+    }
+
     String cashierNum;
     String arrivalInt;
     String itemsNum;
-
+    PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>();
 
     @Override
     public void start(Stage primaryStage) throws Exception {

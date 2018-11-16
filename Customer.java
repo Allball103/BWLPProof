@@ -6,6 +6,12 @@ public class Customer{
     // Percentage chance the customer leaves
     int impatienceFactor;
 
+    //the current event the customer has in the priority queue
+    EventLoop.Event currentEvent;
+
+    //the time that the current event will finish
+    int finishTime;
+
     // Getters
     int getItemsInCart(){
         return itemsInCart;
