@@ -1,5 +1,11 @@
 // Defines the Cashier class
 public class Cashier{
+
+    public Cashier(){
+        checkOutSpeed = (int)Math.random() * 10;
+        customerAtRegister = false;
+    }
+
     // How fast the cashier can check out items
     int checkOutSpeed;
 

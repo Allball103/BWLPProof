@@ -11,6 +11,10 @@ import javafx.scene.control.ComboBox;
 
 import java.util.PriorityQueue;
 import java.awt.*;
+import java.util.PriorityQueue;
+import java.util.Timer;
+import java.time.Clock;
+
 
 public class EventLoop extends Application {
 
@@ -22,8 +26,17 @@ public class EventLoop extends Application {
     String cashierNum;
     String arrivalInt;
     String itemsNum;
-    PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>();
+    PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>(); //need to make a comparable by the time the event will finish for the given customer
 
+        // could maybe use this code later for limiting the amount of time the system runs
+//    int remainingTime = 1000;
+//    long timeout = System.currentTimeMillis() + (remainingTime * 1000);
+//    long currentTime = System.currentTimeMillis();
+//    while ((int)currentTime > (int)timeout) {
+//        Thread.sleep(1000);
+//        System.out.println("You have : " + (timeout - System.currentTimeMillis()) / 1000 + " seconds left");
+//    }
+    boolean stop = false;
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -74,13 +87,32 @@ public class EventLoop extends Application {
             arrivalInt = comboBoxArrive.getValue().toString();
             itemsNum = comboBoxItems.getValue().toString();
 
+            int arrivalNumber = (int)comboBoxCash.getValue();
+
 
             System.out.println("Number of Cashiers: " + cashierNum);
             System.out.println("Mean Customer Arrival Interval: " + arrivalInt);
             System.out.println("Average Number of Items: " +  itemsNum);
 
+            Store store = new Store();
+
+            store.setNumCashiers((int)comboBoxCash.getValue());
+            store.cashierCreator((int)comboBoxCash.getValue());
+
+            long customerStartTime = System.currentTimeMillis();
+
+
 
             // RUN SIMULATION CODE HERE //
+
+            while(!stop){
+                if(System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
+                    Customer c = new Customer(); //
+                    pQueue.add(c);
+                    customerStartTime = System.currentTimeMillis();
+                }
+
+            }
 
         });
 
@@ -91,7 +123,5 @@ public class EventLoop extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) { launch(args); }
 }

@@ -2,6 +2,10 @@ import java.util.ArrayList;
 
 // Defines the Store class
 public class Store{
+
+    // The cashiers available
+    ArrayList<Cashier> cashiers;
+
     // The lines the grocery store has (normal)
     ArrayList<ArrayList<Customer>> lines;
 
@@ -16,6 +20,9 @@ public class Store{
 
     // How busy it is
     int busyness;
+
+    // Number of Cashiers
+    int numCashiers;
 
     // The day of the week
     enum dayOfWeek {
@@ -60,6 +67,19 @@ public class Store{
         this.busyness = busyness;
     }
 
+    public void setNumCashiers(int numCashiers){ this.numCashiers = numCashiers;}
+
+    // create the list of cashiers
+    public void cashierCreator(int numCashiers){
+        if(cashiers.isEmpty()) {
+            cashiers.clear();
+        }
+        for(int i = 0; i < numCashiers; i++){
+            Cashier c = new Cashier();
+            cashiers.add(c);
+        }
+    }
+
     //customer joins the airport line
     public void joinLine(Customer c){
         //choose which line customer c joins
@@ -77,7 +97,7 @@ public class Store{
     }
 
     //every second has a 1/customerChance chance to spawn a customer, with customerChance being the average time between spawns
-    public boolean customerDistrobution(){
+    public boolean customerDistribution(){
         //customer chance will eventually be selected, not hardcoded
         int customerChance = 5;
 

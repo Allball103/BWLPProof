@@ -1,5 +1,15 @@
 // Defines the Customer class
 public class Customer{
+
+    // Constructor
+    // Sets the itemsinCart to 0, gives them a random impatience factor,
+    Customer(){
+        itemsInCart = 0;
+        impatienceFactor = (int)Math.random() * 10;
+        finishTime = 0;
+        currentEvent = EventLoop.Event.CUSTOMER_ARRIVES_IN_STORE;
+    }
+
     // Number of items customer has
     int itemsInCart;
 
@@ -29,6 +39,8 @@ public class Customer{
     public void setItemsInCart(int itemsInCart) {
         this.itemsInCart = itemsInCart;
     }
+
+    public void setFinishTime(int finishTime) {this.finishTime = finishTime;}
 
     //increments items in cart
     //stretch goal: add type of item to cart
