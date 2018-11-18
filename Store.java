@@ -4,10 +4,11 @@ import java.util.ArrayList;
 public class Store{
 
     // The cashiers available
-    ArrayList<Cashier> cashiers;
+    //ArrayList<Cashier> cashiers;
+    private ArrayList<Cashier> cashiers = new ArrayList<Cashier>();
 
     // The lines the grocery store has (normal)
-    ArrayList<ArrayList<Customer>> lines;
+    ArrayList<ArrayList<Customer>> lines = new ArrayList<ArrayList<Customer>>();
 
     // Single line that goes to others
     public ArrayList<Customer> airportLine;
@@ -71,9 +72,10 @@ public class Store{
 
     // create the list of cashiers
     public void cashierCreator(int numCashiers){
-        if(cashiers.isEmpty()) {
-            cashiers.clear();
-        }
+
+        //if(cashiers.isEmpty()) {
+        //cashiers.clear();
+        //}
         for(int i = 0; i < numCashiers; i++){
             Cashier c = new Cashier();
             cashiers.add(c);
@@ -96,17 +98,20 @@ public class Store{
         c = null;
     }
 
-    //every second has a 1/customerChance chance to spawn a customer, with customerChance being the average time between spawns
-    public boolean customerDistribution(){
-        //customer chance will eventually be selected, not hardcoded
-        int customerChance = 5;
+    //I'm gonna be honest i have no idea what this does but it's what he gave us
+    public double customerDistribution(int chance){
+        double u,x;
+        u = (Math.random());
+        x = -chance * Math.log(1.0 - u);
+        return x;
 
-        if((int) (Math.random() * customerChance) == 0){
-            //spawn customer
-            return true;
-        } else {
-            return false;
-        }
+//every second has a 1/customerChance chance to spawn a customer, with chance being the average time between spawns
+//        if((int) (Math.random() * customerChance) == 0){
+//            //spawn customer
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 
     public void openStore(){}
