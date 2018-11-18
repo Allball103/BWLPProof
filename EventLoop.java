@@ -128,7 +128,7 @@ public class EventLoop extends Application {
 
             while(!stop){
                 //this adds a customer to the store
-                if(System.currentTimeMillis() - customerStartTime == (dist*10000) ){ //System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
+                if(System.currentTimeMillis() - customerStartTime == (dist*1000) ){ //System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
                     Customer c = new Customer(System.currentTimeMillis()); //
                     pQueue.add(c);
                     customerStartTime = System.currentTimeMillis();
