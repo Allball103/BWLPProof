@@ -133,6 +133,7 @@ public class EventLoop extends Application {
                     System.out.println("Added a new Customer.");
                 }
                 //this transitions the customer to be ready for checkout
+                if(!pQueue.isEmpty()){
                 if((pQueue.peek().getFinishTime() * 1000) + overallStartTime == System.currentTimeMillis()){
                     if(pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT){
                         Customer c = new Customer(pQueue.peek().getItemsInCart(), pQueue.peek().getImpatienceFactor(), Event.CUSTOMER_READY_FOR_CHECKOUT);
@@ -144,7 +145,7 @@ public class EventLoop extends Application {
 
 
 
-            }
+            }}
 
         });
 
