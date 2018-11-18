@@ -20,7 +20,7 @@ public class Customer{
     EventLoop.Event currentEvent;
 
     //the time that the current event will finish
-    int finishTime;
+    private int finishTime;
 
     // Getters
     int getItemsInCart(){
@@ -30,6 +30,8 @@ public class Customer{
     int getImpatienceFactor(){
         return impatienceFactor;
     }
+
+    int getFinishTime() { return finishTime;}
 
     // Setters
     public void setImpatienceFactor(int impatienceFactor) {
@@ -41,6 +43,7 @@ public class Customer{
     }
 
     public void setFinishTime(int finishTime) {this.finishTime = finishTime;}
+
 
     //increments items in cart
     //stretch goal: add type of item to cart

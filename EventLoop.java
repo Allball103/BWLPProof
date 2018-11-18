@@ -26,7 +26,15 @@ public class EventLoop extends Application {
     String cashierNum;
     String arrivalInt;
     String itemsNum;
-    PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>(); //need to make a comparable by the time the event will finish for the given customer
+    PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>((c1,c2) -> {
+        if(c1.getFinishTime() < c2.getFinishTime()){
+            return -1;
+        } if(c1.getFinishTime() == c2.getFinishTime()) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }); //need to make a comparable by the time the event will finish for the given customer
 
         // could maybe use this code later for limiting the amount of time the system runs
 //    int remainingTime = 1000;
@@ -87,7 +95,7 @@ public class EventLoop extends Application {
             arrivalInt = comboBoxArrive.getValue().toString();
             itemsNum = comboBoxItems.getValue().toString();
 
-            int arrivalNumber = (int)comboBoxCash.getValue();
+            int arrivalNumber = (int)comboBoxArrive.getValue();
 
 
             System.out.println("Number of Cashiers: " + cashierNum);
@@ -96,9 +104,18 @@ public class EventLoop extends Application {
 
             Store store = new Store();
 
-            store.setNumCashiers((int)comboBoxCash.getValue());
-            store.cashierCreator((int)comboBoxCash.getValue());
-
+            //sets number of cashiers based on dropdown selection
+            switch(comboBoxCash.getValue().toString()) {
+                case "1 Cashier":
+                    store.setNumCashiers(1);
+                    store.cashierCreator(1);
+                case "2 Cashiers":
+                    store.setNumCashiers(2);
+                    store.cashierCreator(2);
+                case "3 Cashiers":
+                    store.setNumCashiers(3);
+                    store.cashierCreator(3);
+            }
             long customerStartTime = System.currentTimeMillis();
 
 
