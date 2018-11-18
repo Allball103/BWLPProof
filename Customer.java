@@ -3,10 +3,11 @@ public class Customer{
 
     // Constructor
     // Sets the itemsinCart to 0, gives them a random impatience factor,
-    Customer(){
+    Customer(long currTime){
+        enterTime = currTime;
         itemsInCart = (int)Math.random() * 100;
         impatienceFactor = (int)Math.random() * 10;
-        finishTime = itemsInCart / 2;
+        finishTime = currTime + 5000;
         currentEvent = EventLoop.Event.CUSTOMER_ARRIVES_IN_STORE;
     }
 
@@ -16,6 +17,9 @@ public class Customer{
         this.currentEvent = currentEvent;
     }
 
+    //time that they entered the store
+    private long enterTime;
+
     // Number of items customer has
     int itemsInCart;
 
@@ -23,12 +27,14 @@ public class Customer{
     int impatienceFactor;
 
     //the current event the customer has in the priority queue
-    EventLoop.Event currentEvent;
+    private EventLoop.Event currentEvent;
 
     //the time that the current event will finish
-    private int finishTime;
+    private long finishTime;
 
     // Getters
+    long getEnterTime() { return enterTime; }
+
     int getItemsInCart(){
         return itemsInCart;
     }
@@ -37,9 +43,13 @@ public class Customer{
         return impatienceFactor;
     }
 
-    int getFinishTime() { return finishTime;}
+    long getFinishTime() { return finishTime;}
+
+    EventLoop.Event getCurrentEvent(){return currentEvent;}
 
     // Setters
+    public void setEnterTime(long currTime) {this.enterTime = currTime;}
+
     public void setImpatienceFactor(int impatienceFactor) {
         this.impatienceFactor = impatienceFactor;
     }
@@ -48,18 +58,15 @@ public class Customer{
         this.itemsInCart = itemsInCart;
     }
 
-    public void setFinishTime(int finishTime) {this.finishTime = finishTime;}
+    public void setFinishTime(long finishTime) {this.finishTime = finishTime;}
 
-
+    public void setCurrentEvent(EventLoop.Event newEvent) {this.currentEvent = newEvent;}
     //increments items in cart
     //stretch goal: add type of item to cart
     public void putItemsInCart(int numItems /*(also has type of item as a param for stretch goal)*/){
         setItemsInCart(getItemsInCart() +1);
     }
 
-    public EventLoop.Event getCurrentEvent() {
-        return currentEvent;
-    }
 
 
     //leaveStore() and joinLine() moved to Store.java
