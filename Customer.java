@@ -4,10 +4,16 @@ public class Customer{
     // Constructor
     // Sets the itemsinCart to 0, gives them a random impatience factor,
     Customer(){
-        itemsInCart = 0;
+        itemsInCart = (int)Math.random() * 100;
         impatienceFactor = (int)Math.random() * 10;
-        finishTime = 0;
+        finishTime = itemsInCart / 2;
         currentEvent = EventLoop.Event.CUSTOMER_ARRIVES_IN_STORE;
+    }
+
+    public Customer(int itemsInCart, int impatienceFactor, EventLoop.Event currentEvent) {
+        this.itemsInCart = itemsInCart;
+        this.impatienceFactor = impatienceFactor;
+        this.currentEvent = currentEvent;
     }
 
     // Number of items customer has
@@ -50,6 +56,11 @@ public class Customer{
     public void putItemsInCart(int numItems /*(also has type of item as a param for stretch goal)*/){
         setItemsInCart(getItemsInCart() +1);
     }
+
+    public EventLoop.Event getCurrentEvent() {
+        return currentEvent;
+    }
+
 
     //leaveStore() and joinLine() moved to Store.java
 }
