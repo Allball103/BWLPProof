@@ -126,18 +126,16 @@ public class EventLoop extends Application {
 
             while(!stop){
                 //this adds a customer to the store
-                if(System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
+                if(System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){ //Current time - the time they started == the time a new customer is supposed to appear
                     Customer c = new Customer(); //
                     pQueue.add(c);
                     customerStartTime = System.currentTimeMillis();
                     System.out.println("Added a new Customer.");
                 }
                 //this transitions the customer to be ready for checkout
-                if((pQueue.peek().getFinishTime() * 1000) + overallStartTime == System.currentTimeMillis()){
-                    if(pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT){
-                        Customer c = new Customer(pQueue.peek().getItemsInCart(), pQueue.peek().getImpatienceFactor(), Event.CUSTOMER_READY_FOR_CHECKOUT);
-                        pQueue.add(c);
-                        pQueue.poll();
+                if(pQueue.peek().getFinishTime() * 1000 + overallStartTime == System.currentTimeMillis() && !pQueue.isEmpty()){
+                    if(pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT && !pQueue.isEmpty()){
+                        pQueue.peek().setFinishTime(5);
                         System.out.println("Transitioned Customer");
                     }
                 }

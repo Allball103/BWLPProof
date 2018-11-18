@@ -4,7 +4,7 @@ public class Customer{
     // Constructor
     // Sets the itemsinCart to 0, gives them a random impatience factor,
     Customer(){
-        itemsInCart = (int)Math.random() * 100;
+        itemsInCart = 10;
         impatienceFactor = (int)Math.random() * 10;
         finishTime = itemsInCart / 2;
         currentEvent = EventLoop.Event.CUSTOMER_ARRIVES_IN_STORE;
