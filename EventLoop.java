@@ -121,16 +121,20 @@ public class EventLoop extends Application {
             long customerStartTime = System.currentTimeMillis();
             long customerCheckOutTime = System.currentTimeMillis();
 
-
+            double doubleDist = store.customerDistribution(arrivalNumber);
+            //casting is a problem here; need to somehow remove decimal points without rounding or something?
+            int dist = (int) doubleDist;
             // RUN SIMULATION CODE HERE //
 
             while(!stop){
                 //this adds a customer to the store
-                if(System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
+                if(System.currentTimeMillis() - customerStartTime == (dist*10000) ){ //System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
                     Customer c = new Customer(System.currentTimeMillis()); //
                     pQueue.add(c);
                     customerStartTime = System.currentTimeMillis();
                     System.out.println("Added a new Customer.");
+                    doubleDist = store.customerDistribution(arrivalNumber);
+                    dist = (int) doubleDist;
                 }
                 //this changes events
                 if(!pQueue.isEmpty()) {
