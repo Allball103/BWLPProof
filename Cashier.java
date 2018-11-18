@@ -2,23 +2,23 @@
 public class Cashier{
 
     public Cashier(){
-        checkOutSpeed = (int)Math.random() * 10;
-        customerAtRegister = false;
+        checkOutSpeed = (int)Math.random() * 10 + 1;
+        available = true;
     }
 
     // How fast the cashier can check out items
     int checkOutSpeed;
 
     // If there is a customer at their register
-    boolean customerAtRegister;
+    boolean available;
 
     // Getters
     int getCheckOutSpeed(){
         return checkOutSpeed;
     }
 
-    boolean getCustomerAtRegister(){
-        return customerAtRegister;
+    boolean getAvailable(){
+        return available;
     }
 
     // Setters
@@ -26,8 +26,8 @@ public class Cashier{
         this.checkOutSpeed = checkOutSpeed;
     }
 
-    public void setCustomerAtRegister(boolean customerAtRegister) {
-        this.customerAtRegister = customerAtRegister;
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     //determines the time it will take the cashier to check the current customer out

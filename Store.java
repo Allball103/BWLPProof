@@ -7,14 +7,14 @@ public class Store{
     //ArrayList<Cashier> cashiers;
     private ArrayList<Cashier> cashiers = new ArrayList<Cashier>();
 
-    // The lines the grocery store has (normal)
-    ArrayList<ArrayList<Customer>> lines = new ArrayList<ArrayList<Customer>>();
+    // Customers checking out
+    private ArrayList<Customer> checkingOut = new ArrayList<Customer>();
 
     // Single line that goes to others
-    public ArrayList<Customer> airportLine;
+    private ArrayList<Customer> airportLine = new ArrayList<Customer>();
 
     // 15 items or fewer line
-    public ArrayList<Customer> fifteenOrLess;
+    private ArrayList<Customer> fifteenOrLess = new ArrayList<Customer>();
 
     // Time of the day
     int time;
@@ -23,7 +23,7 @@ public class Store{
     int busyness;
 
     // Number of Cashiers
-    int numCashiers;
+    private int numCashiers;
 
     // The day of the week
     enum dayOfWeek {
@@ -31,9 +31,9 @@ public class Store{
     }
 
     // Getters
-    ArrayList<ArrayList<Customer>> getLines(){
-        return lines;
-    }
+    ArrayList<Cashier> getCashiers() { return cashiers; }
+
+    ArrayList<Customer> getCheckingOut() { return checkingOut; }
 
     ArrayList<Customer> getAirportLine(){
         return airportLine;
@@ -49,12 +49,16 @@ public class Store{
         return busyness;
     }
 
-    // Setters
-    public void setLines(ArrayList<ArrayList<Customer>> lines) { this.lines = lines; }
+    int getNumCashiers(){ return numCashiers; }
 
+    // Setters
     public void setAirportLine(ArrayList<Customer> airportLine) {
         this.airportLine = airportLine;
     }
+
+    public void setCheckingOut(ArrayList<Customer> checkingOut) { this.checkingOut = checkingOut; }
+
+    public void setCashiers(ArrayList<Cashier> cashiers) { this.cashiers = cashiers; }
 
     public void setFifteenOrLess(ArrayList<Customer> fiveOrLess) {
         this.fifteenOrLess = fiveOrLess;
@@ -89,6 +93,16 @@ public class Store{
             fifteenOrLess.add(c);
         } else {
             airportLine.add(c);
+        }
+    }
+
+    // NEEDS FIXING (i think)
+    //customer leaves lines
+    public void leaveLine(Customer c){
+        if (c.itemsInCart <= 15){
+            fifteenOrLess.remove(0);
+        } else {
+            airportLine.remove(0);
         }
     }
 

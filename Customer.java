@@ -32,6 +32,9 @@ public class Customer{
     //the time that the current event will finish
     private long finishTime;
 
+    // register they are at for checking out
+    private int registerNum;
+
     // Getters
     long getEnterTime() { return enterTime; }
 
@@ -47,6 +50,8 @@ public class Customer{
 
     EventLoop.Event getCurrentEvent(){return currentEvent;}
 
+    public int getRegisterNum() { return registerNum; }
+
     // Setters
     public void setEnterTime(long currTime) {this.enterTime = currTime;}
 
@@ -61,6 +66,9 @@ public class Customer{
     public void setFinishTime(long finishTime) {this.finishTime = finishTime;}
 
     public void setCurrentEvent(EventLoop.Event newEvent) {this.currentEvent = newEvent;}
+
+    public void setRegisterNum(int registerNum){this.registerNum = registerNum;}
+
     //increments items in cart
     //stretch goal: add type of item to cart
     public void putItemsInCart(int numItems /*(also has type of item as a param for stretch goal)*/){

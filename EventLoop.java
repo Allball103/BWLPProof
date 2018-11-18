@@ -132,19 +132,41 @@ public class EventLoop extends Application {
                     customerStartTime = System.currentTimeMillis();
                     System.out.println("Added a new Customer.");
                 }
-                //this transitions the customer to be ready for checkout
+                //this changes events
                 if(!pQueue.isEmpty()) {
-                    if ((pQueue.peek().getFinishTime() /* 1000*/) /*+ overallStartTime*/ == System.currentTimeMillis()) {
+                    if ((pQueue.peek().getFinishTime()) == System.currentTimeMillis()) {
                         if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ARRIVES_IN_STORE) {
-                            pQueue.peek().setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
-                            pQueue.peek().setFinishTime(pQueue.peek().getFinishTime() * 2);
-                            System.out.println("fuck yeah");
-                        }
-                        if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT) {
-                            Customer c = new Customer(pQueue.peek().getItemsInCart(), pQueue.peek().getImpatienceFactor(), Event.CUSTOMER_READY_FOR_CHECKOUT);
+                            Customer c = pQueue.poll();
+                            c.setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
+                            c.setFinishTime(System.currentTimeMillis() + 6000);
+                            store.joinLine(c);
                             pQueue.add(c);
-                            pQueue.poll();
+                            System.out.println("Customer ready for checkout");
+                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT) {
+                            Customer c = pQueue.poll();
+                            c.setCurrentEvent(Event.CUSTOMER_FINISHES_CHECKOUT);
+                            c.setFinishTime(System.currentTimeMillis() + 4000);
+                            boolean notInLine = true;
+                            for(int i = 0; i < store.getNumCashiers(); i++){
+                                if(store.getCashiers().get(i).available && notInLine){
+                                    store.getCheckingOut().add(i, c);
+                                    store.getCashiers().get(i).setAvailable(false);
+                                    store.leaveLine(c);
+                                    c.setRegisterNum(i);
+                                    notInLine = false;
+                                }
+                            }
+                            pQueue.add(c);
                             System.out.println("Transitioned Customer");
+                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
+                            Customer c = pQueue.poll();
+                            // should maybe add try catch
+                            store.getCheckingOut().set(c.getRegisterNum(), null);
+                            System.out.println("Customer checked out and left store");
+
+
+                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ABANDONS_LINE) {
+
                         }
                     }
                 }
