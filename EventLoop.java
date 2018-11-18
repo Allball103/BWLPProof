@@ -139,15 +139,12 @@ public class EventLoop extends Application {
                             pQueue.peek().setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
                             pQueue.peek().setFinishTime(pQueue.peek().getFinishTime() * 2);
                             System.out.println("fuck yeah");
-                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT) {
+                        }
+                        if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT) {
                             Customer c = new Customer(pQueue.peek().getItemsInCart(), pQueue.peek().getImpatienceFactor(), Event.CUSTOMER_READY_FOR_CHECKOUT);
                             pQueue.add(c);
                             pQueue.poll();
                             System.out.println("Transitioned Customer");
-                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ABANDONS_LINE) {
-
-                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
-                            
                         }
                     }
                 }
