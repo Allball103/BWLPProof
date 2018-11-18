@@ -163,9 +163,9 @@ public class EventLoop extends Application {
                             // should maybe add try catch
                             store.getCheckingOut().set(c.getRegisterNum(), null);
                             System.out.println("Customer checked out and left store");
-
-
                         } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ABANDONS_LINE) {
+                            Customer c = pQueue.poll();
+                            
 
                         }
                     }
