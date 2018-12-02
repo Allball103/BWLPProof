@@ -12,9 +12,9 @@ public class Customer{
     }
 
     //creates customer using the exponential dist
-    Customer(double currTime, double dist){
+    Customer(double currTime, double dist, double items){
         enterTime = currTime;
-        itemsInCart = (int)Math.random() * 100;
+        itemsInCart = (int) items;
         impatienceFactor = (int)Math.random() * 10;
         finishTime = currTime + dist;
         currentEvent = EventLoop.Event.CUSTOMER_SPAWNS;

@@ -127,10 +127,11 @@ public class EventLoop extends Application {
             double customerCheckOutTime = CurrentTime;
 
             double doubleDist = store.customerDistribution(arrivalNumber);
+            double items = store.customerDistribution(itemsNumber);
             //casting is a problem here; need to somehow remove decimal points without rounding or something?
             //int dist = (int) doubleDist;
 
-            Customer cust = new Customer(CurrentTime, doubleDist);
+            Customer cust = new Customer(CurrentTime, doubleDist, items);
             pQueue.add(cust);
             double customerStartTime = CurrentTime;
             // RUN SIMULATION CODE HERE //
@@ -154,13 +155,14 @@ public class EventLoop extends Application {
                         //Create a new customer that arrives at store
                         Customer c = pQueue.poll();
                         c.setCurrentEvent(Event.CUSTOMER_ARRIVES_IN_STORE);
-                        c.setFinishTime(CurrentTime + 6);
+                        c.setFinishTime(CurrentTime + c.getItemsInCart());
                         pQueue.add(c);
                         System.out.println("Added a new Customer.");
                         //Also must figure out when the next customer spawns.
                         doubleDist = store.customerDistribution(arrivalNumber);
+                        items = store.customerDistribution(arrivalNumber);
                         //dist = (int) doubleDist;
-                        Customer c2 = new Customer(CurrentTime, doubleDist);
+                        Customer c2 = new Customer(CurrentTime, doubleDist, items);
                         pQueue.add(c2);
                         customerStartTime = CurrentTime;
 
@@ -171,7 +173,18 @@ public class EventLoop extends Application {
                         Customer c = pQueue.poll();
                         c.setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
                         //Set finish time based on when a cashier will be ready
-                        c.setFinishTime(CurrentTime + 6);
+                        boolean openCashier = false;
+                        for (int i = 0; i < store.getNumCashiers(); i++) {
+                            if (store.getCashiers().get(i).available && openCashier == false) {
+                                openCashier = true;
+                            }
+                        }
+                        if(openCashier == true) {
+                            c.setFinishTime(CurrentTime);
+                        } else {
+                            //Need to determine when there will be an empty register... NO IDEA how to do this
+                            c.setFinishTime(CurrentTime + 10);
+                        }
                         store.joinLine(c);
                         pQueue.add(c);
                         System.out.println("Customer ready for checkout");
@@ -181,8 +194,8 @@ public class EventLoop extends Application {
                         //Create a new customer that's ready to go to a cashier
                         Customer c = pQueue.poll();
                         c.setCurrentEvent(Event.CUSTOMER_FINISHES_CHECKOUT);
-                        c.setFinishTime(CurrentTime + 4);
                         boolean notInLine = true;
+                        int cashierSpeed = 1;
                         for (int i = 0; i < store.getNumCashiers(); i++) {
                             if (store.getCashiers().get(i).available && notInLine) {
                                 store.getCheckingOut().add(i, c);
@@ -192,14 +205,18 @@ public class EventLoop extends Application {
                                 notInLine = false;
                             }
                         }
+                        //Finish time = current time + items in customers cart * cashier's check out speed
+                        c.setFinishTime(CurrentTime + c.getItemsInCart() * store.getCashiers().get(c.getRegisterNum()).getCheckOutSpeed());
                         pQueue.add(c);
                         System.out.println("Transitioned Customer");
                     } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
+                        CurrentTime = pQueue.peek().getFinishTime();
                         Customer c = pQueue.poll();
                         // should maybe add try catch
                         store.getCheckingOut().set(c.getRegisterNum(), null);
                         System.out.println("Customer checked out and left store");
                     } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ABANDONS_LINE) {
+                        CurrentTime = pQueue.peek().getFinishTime();
                         Customer c = pQueue.poll();
 
                     }
