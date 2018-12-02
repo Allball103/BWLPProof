@@ -3,12 +3,21 @@ public class Customer{
 
     // Constructor
     // Sets the itemsinCart to 0, gives them a random impatience factor,
-    Customer(long currTime){
+    Customer(double currTime){
         enterTime = currTime;
         itemsInCart = (int)Math.random() * 100;
         impatienceFactor = (int)Math.random() * 10;
-        finishTime = currTime + 5000;
-        currentEvent = EventLoop.Event.CUSTOMER_ARRIVES_IN_STORE;
+        finishTime = currTime + 5;
+        currentEvent = EventLoop.Event.CUSTOMER_SPAWNS;
+    }
+
+    //creates customer using the exponential dist
+    Customer(double currTime, double dist){
+        enterTime = currTime;
+        itemsInCart = (int)Math.random() * 100;
+        impatienceFactor = (int)Math.random() * 10;
+        finishTime = currTime + dist;
+        currentEvent = EventLoop.Event.CUSTOMER_SPAWNS;
     }
 
     public Customer(int itemsInCart, int impatienceFactor, EventLoop.Event currentEvent) {
@@ -18,7 +27,7 @@ public class Customer{
     }
 
     //time that they entered the store
-    private long enterTime;
+    private double enterTime;
 
     // Number of items customer has
     int itemsInCart;
@@ -30,13 +39,13 @@ public class Customer{
     private EventLoop.Event currentEvent;
 
     //the time that the current event will finish
-    private long finishTime;
+    private double finishTime;
 
     // register they are at for checking out
     private int registerNum;
 
     // Getters
-    long getEnterTime() { return enterTime; }
+    double getEnterTime() { return enterTime; }
 
     int getItemsInCart(){
         return itemsInCart;
@@ -46,14 +55,14 @@ public class Customer{
         return impatienceFactor;
     }
 
-    long getFinishTime() { return finishTime;}
+    double getFinishTime() { return finishTime;}
 
     EventLoop.Event getCurrentEvent(){return currentEvent;}
 
     public int getRegisterNum() { return registerNum; }
 
     // Setters
-    public void setEnterTime(long currTime) {this.enterTime = currTime;}
+    public void setEnterTime(double currTime) {this.enterTime = currTime;}
 
     public void setImpatienceFactor(int impatienceFactor) {
         this.impatienceFactor = impatienceFactor;
@@ -63,7 +72,7 @@ public class Customer{
         this.itemsInCart = itemsInCart;
     }
 
-    public void setFinishTime(long finishTime) {this.finishTime = finishTime;}
+    public void setFinishTime(double finishTime) {this.finishTime = finishTime;}
 
     public void setCurrentEvent(EventLoop.Event newEvent) {this.currentEvent = newEvent;}
 

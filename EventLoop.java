@@ -8,6 +8,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import java.text.DecimalFormat;
+import org.omg.CORBA.Current;
 
 import java.util.PriorityQueue;
 import java.awt.*;
@@ -20,12 +22,14 @@ public class EventLoop extends Application {
 
     enum Event
     {
-        CUSTOMER_ARRIVES_IN_STORE, CUSTOMER_READY_FOR_CHECKOUT, CUSTOMER_FINISHES_CHECKOUT, CUSTOMER_ABANDONS_LINE;
+        CUSTOMER_SPAWNS, CUSTOMER_ARRIVES_IN_STORE, CUSTOMER_READY_FOR_CHECKOUT, CUSTOMER_FINISHES_CHECKOUT, CUSTOMER_ABANDONS_LINE;
     }
 
     String cashierNum;
     String arrivalInt;
     String itemsNum;
+    //keeps track of the current time at the store
+    double CurrentTime = 0;
     PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>((c1,c2) -> {
         if(c1.getFinishTime() < c2.getFinishTime()){
             return -1;
@@ -96,6 +100,7 @@ public class EventLoop extends Application {
             itemsNum = comboBoxItems.getValue().toString();
 
             int arrivalNumber = (int)comboBoxArrive.getValue();
+            int itemsNumber = (int)comboBoxItems.getValue();
 
 
             System.out.println("Number of Cashiers: " + cashierNum);
@@ -117,65 +122,99 @@ public class EventLoop extends Application {
                     store.cashierCreator(3);
             }
 
-            long overallStartTime = System.currentTimeMillis();
-            long customerStartTime = System.currentTimeMillis();
-            long customerCheckOutTime = System.currentTimeMillis();
+            double overallStartTime = CurrentTime;
+            double ustomerStartTime = CurrentTime;
+            double customerCheckOutTime = CurrentTime;
 
             double doubleDist = store.customerDistribution(arrivalNumber);
             //casting is a problem here; need to somehow remove decimal points without rounding or something?
-            int dist = (int) doubleDist;
+            //int dist = (int) doubleDist;
+
+            Customer cust = new Customer(CurrentTime, doubleDist);
+            pQueue.add(cust);
+            double customerStartTime = CurrentTime;
             // RUN SIMULATION CODE HERE //
 
             while(!stop){
                 //this adds a customer to the store
-                if(System.currentTimeMillis() - customerStartTime == (dist*10000) ){ //System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
-                    Customer c = new Customer(System.currentTimeMillis()); //
+                /*if(CurrentTime == (dist) ){ //System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
+                    Customer c = new Customer(CurrentTime); //
                     pQueue.add(c);
-                    customerStartTime = System.currentTimeMillis();
+                    customerStartTime = CurrentTime;
                     System.out.println("Added a new Customer.");
                     doubleDist = store.customerDistribution(arrivalNumber);
                     dist = (int) doubleDist;
-                }
+                }*/
                 //this changes events
                 if(!pQueue.isEmpty()) {
-                    if ((pQueue.peek().getFinishTime()) == System.currentTimeMillis()) {
-                        if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ARRIVES_IN_STORE) {
-                            Customer c = pQueue.poll();
-                            c.setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
-                            c.setFinishTime(System.currentTimeMillis() + 6000);
-                            store.joinLine(c);
-                            pQueue.add(c);
-                            System.out.println("Customer ready for checkout");
-                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT) {
-                            Customer c = pQueue.poll();
-                            c.setCurrentEvent(Event.CUSTOMER_FINISHES_CHECKOUT);
-                            c.setFinishTime(System.currentTimeMillis() + 4000);
-                            boolean notInLine = true;
-                            for(int i = 0; i < store.getNumCashiers(); i++){
-                                if(store.getCashiers().get(i).available && notInLine){
-                                    store.getCheckingOut().add(i, c);
-                                    store.getCashiers().get(i).setAvailable(false);
-                                    store.leaveLine(c);
-                                    c.setRegisterNum(i);
-                                    notInLine = false;
-                                }
-                            }
-                            pQueue.add(c);
-                            System.out.println("Transitioned Customer");
-                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
-                            Customer c = pQueue.poll();
-                            // should maybe add try catch
-                            store.getCheckingOut().set(c.getRegisterNum(), null);
-                            System.out.println("Customer checked out and left store");
-                        } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ABANDONS_LINE) {
-                            Customer c = pQueue.poll();
-                            
+                    //if ((pQueue.peek().getFinishTime()) == System.currentTimeMillis()) {
+                    if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_SPAWNS) {
+                        //Set current store time to the Finish Time of the next event
+                        CurrentTime = pQueue.peek().getFinishTime();
+                        //Create a new customer that arrives at store
+                        Customer c = pQueue.poll();
+                        c.setCurrentEvent(Event.CUSTOMER_ARRIVES_IN_STORE);
+                        c.setFinishTime(CurrentTime + 6);
+                        pQueue.add(c);
+                        System.out.println("Added a new Customer.");
+                        //Also must figure out when the next customer spawns.
+                        doubleDist = store.customerDistribution(arrivalNumber);
+                        //dist = (int) doubleDist;
+                        Customer c2 = new Customer(CurrentTime, doubleDist);
+                        pQueue.add(c2);
+                        customerStartTime = CurrentTime;
 
+                    } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ARRIVES_IN_STORE) {
+                        //Set current store time to the Finish Time of the next event
+                        CurrentTime = pQueue.peek().getFinishTime();
+                        //Create a new customer that's ready for checkout
+                        Customer c = pQueue.poll();
+                        c.setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
+                        //Set finish time based on when a cashier will be ready
+                        c.setFinishTime(CurrentTime + 6);
+                        store.joinLine(c);
+                        pQueue.add(c);
+                        System.out.println("Customer ready for checkout");
+                    } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT) {
+                        //Set current store time to the Finish Time of the next event
+                        CurrentTime = pQueue.peek().getFinishTime();
+                        //Create a new customer that's ready to go to a cashier
+                        Customer c = pQueue.poll();
+                        c.setCurrentEvent(Event.CUSTOMER_FINISHES_CHECKOUT);
+                        c.setFinishTime(CurrentTime + 4);
+                        boolean notInLine = true;
+                        for (int i = 0; i < store.getNumCashiers(); i++) {
+                            if (store.getCashiers().get(i).available && notInLine) {
+                                store.getCheckingOut().add(i, c);
+                                store.getCashiers().get(i).setAvailable(false);
+                                store.leaveLine(c);
+                                c.setRegisterNum(i);
+                                notInLine = false;
+                            }
                         }
+                        pQueue.add(c);
+                        System.out.println("Transitioned Customer");
+                    } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
+                        Customer c = pQueue.poll();
+                        // should maybe add try catch
+                        store.getCheckingOut().set(c.getRegisterNum(), null);
+                        System.out.println("Customer checked out and left store");
+                    } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ABANDONS_LINE) {
+                        Customer c = pQueue.poll();
+
+                    }
+                    DecimalFormat df = new DecimalFormat();
+                    df.setMaximumFractionDigits(2);
+                    //System.out.println(df.format(CurrentTime));
+                    //prints current time
+                    System.out.println("Current Time: "+ df.format(CurrentTime));
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }
-
         });
 
         VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4);
