@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import java.text.DecimalFormat;
-import org.omg.CORBA.Current;
 
 import java.util.PriorityQueue;
 import java.awt.*;
@@ -69,7 +68,7 @@ public class EventLoop extends Application {
         Label labelArrive = new Label("Mean Customer Arrival Interval: ");
 
         ComboBox comboBoxArrive = new ComboBox();
-        for (int i = 0; i < 11; i++) {
+        for (int i = 1; i < 11; i++) {
             comboBoxArrive.getItems().add(i);
         }
         comboBoxArrive.getSelectionModel().selectFirst();
@@ -78,7 +77,7 @@ public class EventLoop extends Application {
         Label labelItems = new Label("Average Number of Items: ");
 
         ComboBox comboBoxItems = new ComboBox();
-        for (int t = 0; t < 101; t++) {
+        for (int t = 1; t < 101; t++) {
             comboBoxItems.getItems().add(t);
         }
         comboBoxItems.getSelectionModel().selectFirst();
@@ -94,6 +93,8 @@ public class EventLoop extends Application {
         HBox hbox4 = new HBox(buttonReset, buttonStart);
 
         buttonStart.setOnAction(actionEvent ->  {
+
+            primaryStage.close();
 
             cashierNum = comboBoxCash.getValue().toString();
             arrivalInt = comboBoxArrive.getValue().toString();
@@ -134,6 +135,9 @@ public class EventLoop extends Application {
             Customer cust = new Customer(CurrentTime, doubleDist, items);
             pQueue.add(cust);
             double customerStartTime = CurrentTime;
+
+
+
             // RUN SIMULATION CODE HERE //
 
             while(!stop){
@@ -239,6 +243,7 @@ public class EventLoop extends Application {
         Scene scene = new Scene(vbox, 500, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     public static void main(String[] args) { launch(args); }
