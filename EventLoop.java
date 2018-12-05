@@ -186,15 +186,15 @@ public class EventLoop extends Application {
             //casting is a problem here; need to somehow remove decimal points without rounding or something?
             //int dist = (int) doubleDist;
 
-            Customer cust = new Customer(CurrentTime, doubleDist, items);
+            int custIdCounter = 1;
+            Customer cust = new Customer(CurrentTime, doubleDist, items, custIdCounter);
             pQueue.add(cust);
-            double customerStartTime = CurrentTime;
 
             // RUN SIMULATION CODE HERE //
 
             long simulationStartTime = System.currentTimeMillis();
             long simulationEndTime = simulationStartTime + (runTime * 60000);
-            System.out.println("Simulation Start Times: " + simulationStartTime);
+            System.out.println("Simulation Start Time: 0");
 
             int customersProcessed = 0;
 
@@ -222,14 +222,15 @@ public class EventLoop extends Application {
                         c.setCurrentEvent(Event.CUSTOMER_ARRIVES_IN_STORE);
                         c.setFinishTime(CurrentTime + c.getItemsInCart());
                         pQueue.add(c);
-                        System.out.println("Added a new Customer.");
+                        System.out.println("Added a new Customer with ID: " + c.getId());
                         //Also must figure out when the next customer spawns.
                         doubleDist = store.customerDistribution(arrivalNumber);
                         items = store.customerDistribution(arrivalNumber);
+                        // customer id
+                        custIdCounter+=1;
                         //customer defaults to customer spawns event
-                        Customer c2 = new Customer(CurrentTime, doubleDist, items);
+                        Customer c2 = new Customer(CurrentTime, doubleDist, items, custIdCounter);
                         pQueue.add(c2);
-                        customerStartTime = CurrentTime;
                     //This is the event for the customer wandering around the store before getting in line.
                     //Creates a ready for checkout class when they get in line
                     } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ARRIVES_IN_STORE) {
@@ -301,6 +302,7 @@ public class EventLoop extends Application {
                         } else{ //If the cashier was not available, need a way to tell the customer to "continue to wait"
                                 // could also not matter since the finish time is going to be set to something different
                                 // once there is a cashier available. This might still need work.
+
                             c.setFinishTime(CurrentTime + 1);
                             pQueue.add(c);
                             System.out.println("Customer Still Waiting for Cashier");
