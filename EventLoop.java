@@ -9,6 +9,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+import java.io.*;
 import java.text.DecimalFormat;
 
 import java.util.PriorityQueue;
@@ -117,18 +121,43 @@ public class EventLoop extends Application {
 
         buttonStart.setOnAction(actionEvent ->  {
 
-            primaryStage.close();
-
             int arrivalNumber = (int)comboBoxArrive.getValue();
             int itemsNumber = (int)comboBoxItems.getValue();
             int cashierNum = (int)comboBoxCash.getValue();
 
             int runTime = (int)comboBoxTime.getValue();
 
+
             System.out.println("Number of Cashiers: " + cashierNum);
             System.out.println("Mean Customer Arrival Interval: " + arrivalNumber);
             System.out.println("Average Number of Items: " +  itemsNumber);
             System.out.println("Run time: " + runTime);
+
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Start Simulation Run");
+            alert.setHeaderText("We will run the store simulation with the following settings...");
+            alert.setContentText("Number of Cashiers: " + Integer.toString(cashierNum) +
+                    "\n Arrival Interval: " + Integer.toString(arrivalNumber) +
+                    "\n Average Items: " + Integer.toString(itemsNumber) +
+                    "\n Simulation Run Time: " + Integer.toString(runTime));
+
+
+            alert.showAndWait();
+
+            primaryStage.close();
+
+            primaryStage.setTitle("Running Simulation...");
+            Label runningLabel = new Label("Running Simulation...");
+            HBox hboxRun = new HBox(runningLabel);
+
+            hboxRun.setAlignment(Pos.CENTER);
+
+            VBox vboxRun = new VBox(hboxRun);
+            Scene sceneRun = new Scene(vboxRun, 300, 300);
+
+            primaryStage.setScene(sceneRun);
+
+            primaryStage.show();
 
             Store store = new Store();
 
@@ -167,7 +196,10 @@ public class EventLoop extends Application {
             long simulationEndTime = simulationStartTime + (runTime * 60000);
             System.out.println("Simulation Start Times: " + simulationStartTime);
 
+            int customersProcessed = 0;
+
             while(System.currentTimeMillis() < simulationEndTime){
+
                 //this adds a customer to the store
                 /*if(CurrentTime == (dist) ){ //System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
                     Customer c = new Customer(CurrentTime); //
@@ -181,7 +213,7 @@ public class EventLoop extends Application {
                 if(!pQueue.isEmpty()) {
                     //This event is for when the customer is going to arrive in the store.
                     //There will always be exactly one of these events in the queue, as it creates itself.
-                    //After a customer arrives, creates a customer arrives in store event w/ that customr
+                    //After a customer arrives, creates a customer arrives in store event w/ that customer
                     if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_SPAWNS) {
                         //Set current store time to the Finish Time of the next event
                         CurrentTime = pQueue.peek().getFinishTime();
@@ -247,6 +279,7 @@ public class EventLoop extends Application {
                         //Create a new customer that's ready to go to a cashier
                         Customer c = pQueue.poll();
                         c.setCurrentEvent(Event.CUSTOMER_FINISHES_CHECKOUT);
+                        customersProcessed += 1;
                         boolean notInLine = true;
                         for (int i = 0; i < store.getNumCashiers() ; i++) {
                             if (store.getCashiers()[i].available && notInLine) {
@@ -300,15 +333,55 @@ public class EventLoop extends Application {
                     }
                 }
             }
+
+            try {
+                Writer fileWriter = new FileWriter("results.txt", true);
+                fileWriter.write("\n" + Integer.toString(cashierNum) + "               " +
+                        Integer.toString(arrivalNumber) + "                   " + Integer.toString(itemsNumber)
+                        + "               " + Integer.toString(runTime) + "                   " + Integer.toString(customersProcessed));
+
+                fileWriter.close();
+            }
+
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Customers processed: " + customersProcessed);
+
+            primaryStage.close();
+
+            primaryStage.setTitle("Simulation Complete");
+            Label finishedLabel = new Label("Simulation Finished...");
+            Label processedLabel = new Label("Processed: " + Integer.toString(customersProcessed) + " customers");
+
+            HBox finishedHbox = new HBox(finishedLabel);
+            HBox processedHbox = new HBox(processedLabel);
+
+            finishedHbox.setAlignment(Pos.CENTER);
+            processedHbox.setAlignment(Pos.CENTER);
+
+            VBox vbox2 = new VBox(finishedHbox, processedHbox);
+
+            Scene scene2 = new Scene(vbox2, 300, 300);
+
+            primaryStage.setScene(scene2);
+            primaryStage.show();
         });
+
+        // This is displayed when program starts. Just the standard settings menu
 
         VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4, hbox5, hbox6);
 
         Scene scene = new Scene(vbox, 300, 300);
+
         primaryStage.setScene(scene);
         primaryStage.show();
 
+
+
     }
+
+
 
     public static void main(String[] args) { launch(args); }
 }
