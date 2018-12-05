@@ -42,7 +42,4 @@ public class Cashier{
         int time = c.itemsInCart * checkOutSpeed;
         return time;
     }
-
-    //stretch goal
-    public void scanItem(){}
 }

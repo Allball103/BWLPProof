@@ -118,12 +118,15 @@ public class EventLoop extends Application {
                 case 1:
                     store.setNumCashiers(1);
                     store.cashierCreator(1);
+                    break;
                 case 2:
                     store.setNumCashiers(2);
                     store.cashierCreator(2);
+                    break;
                 case 3:
                     store.setNumCashiers(3);
                     store.cashierCreator(3);
+                    break;
             }
 
             double overallStartTime = CurrentTime;
@@ -184,8 +187,8 @@ public class EventLoop extends Application {
                         c.setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
                         //Set finish time based on when a cashier will be ready
                         boolean openCashier = false;
-                        for (int i = 0; i < (store.getNumCashiers() - 1); i++) {
-                            if (store.getCashiers().get(i).available) {
+                        for (int i = 0; i < (store.getNumCashiers()); i++) {
+                            if (store.getCashiers()[i].available) {
                                 openCashier = true;
                             }
                         }
@@ -195,20 +198,21 @@ public class EventLoop extends Application {
                         } else {
                             //Need to determine when there will be an empty register.
                             //Default to the first cashier as the lowest
-                            double lowest = store.getCashiers().get(0).getTimeAvailable();
+                            double lowest = store.getCashiers()[0].getTimeAvailable();
                             int cNum = 0;
                             //If there's multiple cashiers, find the lowest time
-                            for (int i = 1; i < store.getNumCashiers() - 1; i++) {
+                            for (int i = 1; i < store.getNumCashiers(); i++) {
+                                System.out.println(store.getNumCashiers());
                                 System.out.println("hey y'all");
-                                if (store.getCashiers().get(i).getTimeAvailable() < lowest) {
-                                    lowest = store.getCashiers().get(i).getTimeAvailable();
+                                if (store.getCashiers()[i].getTimeAvailable() < lowest) {
+                                    lowest = store.getCashiers()[i].getTimeAvailable();
                                     cNum = i;
                                 }
                             }
                             //Set the customer's finish time to the lowest cashier availability,
                             //AND set that cashier's availability time to after that customer will be done.
                             c.setFinishTime(lowest);
-                            store.getCashiers().get(cNum).setTimeAvailable(CurrentTime + store.getCashiers().get(cNum).checkout(c));
+                            store.getCashiers()[cNum].setTimeAvailable(CurrentTime + store.getCashiers()[cNum].checkout(c));
                         }
                         store.joinLine(c);
                         pQueue.add(c);
@@ -223,27 +227,38 @@ public class EventLoop extends Application {
                         Customer c = pQueue.poll();
                         c.setCurrentEvent(Event.CUSTOMER_FINISHES_CHECKOUT);
                         boolean notInLine = true;
-                        for (int i = 0; i < store.getNumCashiers() - 1; i++) {
-                            if (store.getCashiers().get(i).available && notInLine) {
-                                store.getCheckingOut().add(i, c);
-                                store.getCashiers().get(i).setAvailable(false);
+                        for (int i = 0; i < store.getNumCashiers() ; i++) {
+                            if (store.getCashiers()[i].available && notInLine) {
+                                store.getCheckingOut()[i] = c;
+                                store.getCashiers()[i].setAvailable(false);
                                 store.leaveLine(c);
                                 c.setRegisterNum(i);
                                 notInLine = false;
                             }
                         }
-                        //Set customer finish time based on current time and the checkout cashier method
-                        c.setFinishTime(CurrentTime + store.getCashiers().get(c.getRegisterNum()).checkout(c));
-                        //Set cashier time available to this customer finish time
-                        store.getCashiers().get(c.getRegisterNum()).setTimeAvailable(c.getFinishTime());
-                        pQueue.add(c);
-                        System.out.println("Transitioned Customer");
+                        // This is for if the customer got into the cashiers line becaus they are availible
+                        if(!notInLine){
+                            //Set customer finish time based on current time and the checkout cashier method
+                            c.setFinishTime(CurrentTime + store.getCashiers()[c.getRegisterNum()].checkout(c));
+                            //Set cashier time available to this customer finish time
+                            store.getCashiers()[c.getRegisterNum()].setTimeAvailable(c.getFinishTime());
+                            pQueue.add(c);
+                            System.out.println("Transitioned Customer");
+                        } else{ //If the cashier was not available, need a way to tell the customer to "continue to wait"
+                                // could also not matter since the finish time is going to be set to something different
+                                // once there is a cashier available. This might still need work.
+                            c.setFinishTime(CurrentTime + 1);
+                            pQueue.add(c);
+                            System.out.println("Customer Still Waiting for Cashier");
+                        }
                     //Customer finishes at the cashier and leaves the store.
                     } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
                         CurrentTime = pQueue.peek().getFinishTime();
                         Customer c = pQueue.poll();
                         // should maybe add try catch
-                        store.getCheckingOut().set(c.getRegisterNum(), null);
+                        store.getCheckingOut()[c.getRegisterNum()] = null;
+                        store.getCashiers()[c.getRegisterNum()].setAvailable(true);
+                        //error handling code
                         System.out.println("Customer checked out and left store");
                     //Customer abandons line due to impatience and leaves the store.
                     //Currently does nothing....

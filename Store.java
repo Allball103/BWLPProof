@@ -5,10 +5,10 @@ public class Store{
 
     // The cashiers available
     //ArrayList<Cashier> cashiers;
-    private ArrayList<Cashier> cashiers = new ArrayList<Cashier>();
+    private Cashier cashiers[] = new Cashier[3];
 
     // Customers checking out
-    private ArrayList<Customer> checkingOut = new ArrayList<Customer>();
+    private Customer checkingOut[] = new Customer[3];
 
     // Single line that goes to others
     private ArrayList<Customer> airportLine = new ArrayList<Customer>();
@@ -31,9 +31,9 @@ public class Store{
     }
 
     // Getters
-    ArrayList<Cashier> getCashiers() { return cashiers; }
+    Cashier[] getCashiers() { return cashiers; }
 
-    ArrayList<Customer> getCheckingOut() { return checkingOut; }
+    Customer[] getCheckingOut() { return checkingOut; }
 
     ArrayList<Customer> getAirportLine(){
         return airportLine;
@@ -56,9 +56,9 @@ public class Store{
         this.airportLine = airportLine;
     }
 
-    public void setCheckingOut(ArrayList<Customer> checkingOut) { this.checkingOut = checkingOut; }
+    public void setCheckingOut(Customer[] checkingOut) { this.checkingOut = checkingOut; }
 
-    public void setCashiers(ArrayList<Cashier> cashiers) { this.cashiers = cashiers; }
+    public void setCashiers(Cashier[] cashiers) { this.cashiers = cashiers; }
 
     public void setFifteenOrLess(ArrayList<Customer> fiveOrLess) {
         this.fifteenOrLess = fiveOrLess;
@@ -82,28 +82,20 @@ public class Store{
         //}
         for(int i = 0; i < numCashiers; i++){
             Cashier c = new Cashier();
-            cashiers.add(c);
+            cashiers[i] = c;
         }
     }
 
     //customer joins the airport line
     public void joinLine(Customer c){
         //choose which line customer c joins
-        if(c.itemsInCart <= 15){
-            fifteenOrLess.add(c);
-        } else {
-            airportLine.add(c);
-        }
+        airportLine.add(c);
     }
 
     // NEEDS FIXING (i think)
     //customer leaves lines
     public void leaveLine(Customer c){
-        if (c.itemsInCart <= 15){
-            fifteenOrLess.remove(0);
-        } else {
-            airportLine.remove(0);
-        }
+        airportLine.remove(0);
     }
 
     //deletes a customer
