@@ -13,22 +13,11 @@ public class Store{
     // Single line that goes to others
     private ArrayList<Customer> airportLine = new ArrayList<Customer>();
 
-    // 15 items or fewer line
-    private ArrayList<Customer> fifteenOrLess = new ArrayList<Customer>();
-
-    // Time of the day
-    int time;
-
     // How busy it is
     int busyness;
 
     // Number of Cashiers
     private int numCashiers;
-
-    // The day of the week
-    enum dayOfWeek {
-        Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
-    }
 
     // Getters
     Cashier[] getCashiers() { return cashiers; }
@@ -37,16 +26,6 @@ public class Store{
 
     ArrayList<Customer> getAirportLine(){
         return airportLine;
-    }
-
-    ArrayList<Customer> getFifteenOrLess(){ return fifteenOrLess; }
-
-    int getTime(){
-        return time;
-    }
-
-    int getBusyness(){
-        return busyness;
     }
 
     int getNumCashiers(){ return numCashiers; }
@@ -59,14 +38,6 @@ public class Store{
     public void setCheckingOut(Customer[] checkingOut) { this.checkingOut = checkingOut; }
 
     public void setCashiers(Cashier[] cashiers) { this.cashiers = cashiers; }
-
-    public void setFifteenOrLess(ArrayList<Customer> fiveOrLess) {
-        this.fifteenOrLess = fiveOrLess;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
 
     public void setBusyness(int busyness) {
         this.busyness = busyness;

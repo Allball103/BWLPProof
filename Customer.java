@@ -2,30 +2,19 @@
 public class Customer{
 
     // Constructor
-    // Sets the itemsinCart to 0, gives them a random impatience factor,
-    Customer(double currTime){
-        enterTime = currTime;
-        itemsInCart = (int)Math.random() * 100;
-        impatienceFactor = (int)Math.random() * 10;
-        finishTime = currTime + 5;
-        currentEvent = EventLoop.Event.CUSTOMER_SPAWNS;
-    }
-
     //creates customer using the exponential dist
-    Customer(double currTime, double dist, double items){
+    Customer(double currTime, double dist, double items, int custId){
         enterTime = currTime;
         //add 1 to guarantee they have at least one item
         itemsInCart = ((int) items) + 1;
         impatienceFactor = (int)Math.random() * 10;
         finishTime = currTime + dist;
         currentEvent = EventLoop.Event.CUSTOMER_SPAWNS;
+        id = custId;
     }
 
-    public Customer(int itemsInCart, int impatienceFactor, EventLoop.Event currentEvent) {
-        this.itemsInCart = itemsInCart;
-        this.impatienceFactor = impatienceFactor;
-        this.currentEvent = currentEvent;
-    }
+    //customer id
+    private int id;
 
     //time that they entered the store
     private double enterTime;
@@ -46,6 +35,8 @@ public class Customer{
     private int registerNum;
 
     // Getters
+    int getId() { return  id; }
+
     double getEnterTime() { return enterTime; }
 
     int getItemsInCart(){
@@ -63,6 +54,8 @@ public class Customer{
     public int getRegisterNum() { return registerNum; }
 
     // Setters
+    public void setId(int id){ this.id = id; }
+
     public void setEnterTime(double currTime) {this.enterTime = currTime;}
 
     public void setImpatienceFactor(int impatienceFactor) {
