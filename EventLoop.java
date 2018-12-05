@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -27,6 +28,8 @@ public class EventLoop extends Application {
     String cashierNum;
     String arrivalInt;
     String itemsNum;
+    Integer runTime;
+
     //keeps track of the current time at the store
     double CurrentTime = 0;
     PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>((c1,c2) -> {
@@ -62,9 +65,7 @@ public class EventLoop extends Application {
         for (int i = 1; i < 4; i++) {
             comboBoxCash.getItems().add(i);
         }
-//        comboBoxCash.getItems().add("1 Cashier");
-//        comboBoxCash.getItems().add("2 Cashiers");
-//        comboBoxCash.getItems().add("3 Cashiers");
+
         comboBoxCash.getSelectionModel().selectFirst();
 
         // Mean Customer Arrival Interval //////////////////////////////////////////////////////////////////////////////
@@ -76,6 +77,14 @@ public class EventLoop extends Application {
         }
         comboBoxArrive.getSelectionModel().selectFirst();
 
+        Label labelTime = new Label("Simulation Run Time (minutes): ");
+        ComboBox comboBoxTime = new ComboBox();
+        for (int i = 1; i < 11; i++) {
+            comboBoxTime.getItems().add(i);
+        }
+        comboBoxTime.getSelectionModel().selectFirst();
+
+
         // Average Number of Items /////////////////////////////////////////////////////////////////////////////////////
         Label labelItems = new Label("Average Number of Items: ");
 
@@ -85,31 +94,41 @@ public class EventLoop extends Application {
         }
         comboBoxItems.getSelectionModel().selectFirst();
 
+        Label labelDivider = new Label("---------------------------------------------------");
+
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        Button buttonReset = new Button("Reset Simulation");
         Button buttonStart = new Button("Start Simulation");
 
         HBox hbox1 = new HBox(labelCash, comboBoxCash);
         HBox hbox2 = new HBox(labelArrive, comboBoxArrive);
         HBox hbox3 = new HBox(labelItems, comboBoxItems);
-        HBox hbox4 = new HBox(buttonReset, buttonStart);
+        HBox hbox4 = new HBox(labelTime, comboBoxTime);
+        HBox hbox5 = new HBox(labelDivider);
+        HBox hbox6 = new HBox(buttonStart);
+
+        hbox1.setAlignment(Pos.CENTER);
+        hbox2.setAlignment(Pos.CENTER);
+        hbox3.setAlignment(Pos.CENTER);
+        hbox4.setAlignment(Pos.CENTER);
+        hbox5.setAlignment(Pos.CENTER);
+        hbox6.setAlignment(Pos.CENTER);
 
         buttonStart.setOnAction(actionEvent ->  {
 
             primaryStage.close();
 
-            cashierNum = comboBoxCash.getValue().toString();
-            arrivalInt = comboBoxArrive.getValue().toString();
-            itemsNum = comboBoxItems.getValue().toString();
-
             int arrivalNumber = (int)comboBoxArrive.getValue();
             int itemsNumber = (int)comboBoxItems.getValue();
             int cashierNum = (int)comboBoxCash.getValue();
 
+            int runTime = (int)comboBoxTime.getValue();
+
             System.out.println("Number of Cashiers: " + cashierNum);
-            System.out.println("Mean Customer Arrival Interval: " + arrivalInt);
-            System.out.println("Average Number of Items: " +  itemsNum);
+            System.out.println("Mean Customer Arrival Interval: " + arrivalNumber);
+            System.out.println("Average Number of Items: " +  itemsNumber);
+            System.out.println("Run time: " + runTime);
 
             Store store = new Store();
 
@@ -142,11 +161,13 @@ public class EventLoop extends Application {
             pQueue.add(cust);
             double customerStartTime = CurrentTime;
 
-
-
             // RUN SIMULATION CODE HERE //
 
-            while(!stop){
+            long simulationStartTime = System.currentTimeMillis();
+            long simulationEndTime = simulationStartTime + (runTime * 60000);
+            System.out.println("Simulation Start Times: " + simulationStartTime);
+
+            while(System.currentTimeMillis() < simulationEndTime){
                 //this adds a customer to the store
                 /*if(CurrentTime == (dist) ){ //System.currentTimeMillis() - customerStartTime == (arrivalNumber * 1000)){
                     Customer c = new Customer(CurrentTime); //
@@ -281,9 +302,9 @@ public class EventLoop extends Application {
             }
         });
 
-        VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4);
+        VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4, hbox5, hbox6);
 
-        Scene scene = new Scene(vbox, 500, 500);
+        Scene scene = new Scene(vbox, 300, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
 
