@@ -45,7 +45,7 @@ public class EventLoop extends Application {
             return 1;
         }
     }); //need to make a comparable by the time the event will finish for the given customer
-    
+
     boolean stop = false;
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -254,7 +254,7 @@ public class EventLoop extends Application {
                             //Set the customer's finish time to the lowest cashier availability,
                             //AND set that cashier's availability time to after that customer will be done.
                             c.setFinishTime(lowest);
-                            store.getCashiers()[cNum].setTimeAvailable(CurrentTime + store.getCashiers()[cNum].checkout(c));
+                            store.getCashiers()[cNum].setTimeAvailable(lowest + store.getCashiers()[cNum].checkout(c));
                         }
                         store.joinLine(c);
                         pQueue.add(c);
