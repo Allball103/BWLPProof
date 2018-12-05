@@ -45,15 +45,7 @@ public class EventLoop extends Application {
             return 1;
         }
     }); //need to make a comparable by the time the event will finish for the given customer
-
-        // could maybe use this code later for limiting the amount of time the system runs
-//    int remainingTime = 1000;
-//    long timeout = System.currentTimeMillis() + (remainingTime * 1000);
-//    long currentTime = System.currentTimeMillis();
-//    while ((int)currentTime > (int)timeout) {
-//        Thread.sleep(1000);
-//        System.out.println("You have : " + (timeout - System.currentTimeMillis()) / 1000 + " seconds left");
-//    }
+    
     boolean stop = false;
     @Override
     public void start(Stage primaryStage) throws Exception {
