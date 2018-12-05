@@ -33,6 +33,7 @@ public class Cashier{
     }
 
     double getTimeAvailable() {return timeAvailable; }
+
     // Setters
     public void setFutureCheckouts(ArrayList<Customer> futureCheckouts) {this.futureCheckouts = futureCheckouts; }
 

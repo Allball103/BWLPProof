@@ -177,10 +177,6 @@ public class EventLoop extends Application {
                     break;
             }
 
-            double overallStartTime = CurrentTime;
-            double ustomerStartTime = CurrentTime;
-            double customerCheckOutTime = CurrentTime;
-
             double doubleDist = store.customerDistribution(arrivalNumber);
             double items = store.customerDistribution(itemsNumber);
             //casting is a problem here; need to somehow remove decimal points without rounding or something?
@@ -286,7 +282,7 @@ public class EventLoop extends Application {
                             if (store.getCashiers()[i].available && notInLine) {
                                 store.getCheckingOut()[i] = c;
                                 store.getCashiers()[i].setAvailable(false);
-                                store.leaveLine(c);
+                                store.leaveLine();
                                 c.setRegisterNum(i);
                                 notInLine = false;
                             }

@@ -71,14 +71,4 @@ public class Customer{
     public void setCurrentEvent(EventLoop.Event newEvent) {this.currentEvent = newEvent;}
 
     public void setRegisterNum(int registerNum){this.registerNum = registerNum;}
-
-    //increments items in cart
-    //stretch goal: add type of item to cart
-    public void putItemsInCart(int numItems /*(also has type of item as a param for stretch goal)*/){
-        setItemsInCart(getItemsInCart() +1);
-    }
-
-
-
-    //leaveStore() and joinLine() moved to Store.java
 }
