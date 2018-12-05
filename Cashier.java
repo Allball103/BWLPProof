@@ -4,6 +4,7 @@ public class Cashier{
     public Cashier(){
         checkOutSpeed = (int)Math.random() * 10 + 1;
         available = true;
+        timeAvailable = 0;
     }
 
     // How fast the cashier can check out items
@@ -11,6 +12,9 @@ public class Cashier{
 
     // If there is a customer at their register
     boolean available;
+
+    // If they aren't available, this is the time that they WILL be
+    private double timeAvailable;
 
     // Getters
     int getCheckOutSpeed(){
@@ -21,6 +25,7 @@ public class Cashier{
         return available;
     }
 
+    double getTimeAvailable() {return timeAvailable; }
     // Setters
     public void setCheckOutSpeed(int checkOutSpeed) {
         this.checkOutSpeed = checkOutSpeed;
@@ -30,6 +35,7 @@ public class Cashier{
         this.available = available;
     }
 
+    public void setTimeAvailable(double timeAvailable) { this.timeAvailable = timeAvailable; }
     //determines the time it will take the cashier to check the current customer out
     public int checkout(Customer c){
         //stretch goal; different items will have different check out speeds

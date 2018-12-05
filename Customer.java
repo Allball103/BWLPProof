@@ -14,7 +14,8 @@ public class Customer{
     //creates customer using the exponential dist
     Customer(double currTime, double dist, double items){
         enterTime = currTime;
-        itemsInCart = (int) items;
+        //add 1 to guarantee they have at least one item
+        itemsInCart = ((int) items) + 1;
         impatienceFactor = (int)Math.random() * 10;
         finishTime = currTime + dist;
         currentEvent = EventLoop.Event.CUSTOMER_SPAWNS;

@@ -199,7 +199,6 @@ public class EventLoop extends Application {
                         Customer c = pQueue.poll();
                         c.setCurrentEvent(Event.CUSTOMER_FINISHES_CHECKOUT);
                         boolean notInLine = true;
-                        int cashierSpeed = 1;
                         for (int i = 0; i < store.getNumCashiers(); i++) {
                             if (store.getCashiers().get(i).available && notInLine) {
                                 store.getCheckingOut().add(i, c);
@@ -209,8 +208,7 @@ public class EventLoop extends Application {
                                 notInLine = false;
                             }
                         }
-                        //Finish time = current time + items in customers cart * cashier's check out speed
-                        c.setFinishTime(CurrentTime + c.getItemsInCart() * store.getCashiers().get(c.getRegisterNum()).getCheckOutSpeed());
+                        c.setFinishTime(CurrentTime + store.getCashiers().get(c.getRegisterNum()).checkout(c));
                         pQueue.add(c);
                         System.out.println("Transitioned Customer");
                     } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
