@@ -317,6 +317,23 @@ public class EventLoop extends Application {
             doubleDist = store.customerDistribution(arrivalNumber);
             items = store.customerDistribution(itemsNumber);
 
+            //sets number of cashiers based on dropdown selection
+            switch(cashierNum) {
+                case 1:
+                    store.setNumCashiers(1);
+                    store.cashierCreator(1);
+                    break;
+                case 2:
+
+                    store.setNumCashiers(2);
+                    store.cashierCreator(2);
+                    break;
+                case 3:
+                    store.setNumCashiers(3);
+                    store.cashierCreator(3);
+                    break;
+            }
+            
             // sets our customer counter to start at 1
             custIdCounter = 1;
 
