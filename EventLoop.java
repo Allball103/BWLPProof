@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -18,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Button;
 
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -69,15 +71,18 @@ public class EventLoop extends Application {
 
     int custIdCounter;
 
-
+    boolean firstTime = true;
 
     // Flag that is switched when the user clicks START to enter the simulation while loop
     private boolean start = false;
-    private int custProcessed = 0;
 
-    // start with 0 customers in store for label
+    // start with 0 customers in store and processed in store for GUI label
+    private int custProcessed = 0;
     private int custCount = 0;
-    private final Label custLabel = new Label(Integer.toString(custCount) + " currently in store");
+
+
+    private final Label custLabel = new Label(Integer.toString(custCount) + " customers currently in store");
+    private final Label airportLabel = new Label(" 0 customers currently in airport line");
     private final Label processedLabel = new Label(Integer.toString(custProcessed) + " customers processed");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,6 +90,15 @@ public class EventLoop extends Application {
     private void simulationThread() {
 
         if(!pQueue.isEmpty() && start) {
+
+            if (firstTime) {
+                System.out.println("Arrival Int: " + arrivalNumber);
+                System.out.println("Items Int: " + itemsNumber);
+                System.out.println("Cashiers: " + cashierNum);
+            }
+
+            firstTime = false;
+
             //This event is for when the customer is going to arrive in the store.
             //There will always be exactly one of these events in the queue, as it creates itself.
             //After a customer arrives, creates a customer arrives in store event w/ that customer
@@ -223,10 +237,12 @@ public class EventLoop extends Application {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            custLabel.setText(Integer.toString(custCount) + " customers currently in store");
+            airportLabel.setText(Integer.toString(store.getAirportLine().size()) + " customers currently in airport line");
+            processedLabel.setText(Integer.toString(custProcessed) + " customers processed");
+
         }
-
-        custLabel.setText(Integer.toString(custCount) + " customers currently in store...");
-
     }
 
     @Override
@@ -289,6 +305,8 @@ public class EventLoop extends Application {
         HBox hbox7 = new HBox(labelDivider);
         HBox hbox8 = new HBox(custLabel);
         HBox hbox9 = new HBox(processedLabel);
+        HBox hbox10 = new HBox(airportLabel);
+
 
 
         hbox1.setAlignment(Pos.CENTER);
@@ -300,6 +318,7 @@ public class EventLoop extends Application {
         hbox7.setAlignment(Pos.CENTER);
         hbox8.setAlignment(Pos.CENTER);
         hbox9.setAlignment(Pos.CENTER);
+        hbox10.setAlignment(Pos.CENTER);
 
 
         buttonStart.setOnAction(actionEvent -> {
@@ -316,6 +335,22 @@ public class EventLoop extends Application {
             // generates values from inputs to use in formula for arrival and items distributions
             doubleDist = store.customerDistribution(arrivalNumber);
             items = store.customerDistribution(itemsNumber);
+
+            //sets number of cashiers based on dropdown selection
+            switch(cashierNum) {
+                case 1:
+                    store.setNumCashiers(1);
+                    store.cashierCreator(1);
+                    break;
+                case 2:
+                    store.setNumCashiers(2);
+                    store.cashierCreator(2);
+                    break;
+                case 3:
+                    store.setNumCashiers(3);
+                    store.cashierCreator(3);
+                    break;
+            }
 
             // sets our customer counter to start at 1
             custIdCounter = 1;
@@ -334,7 +369,7 @@ public class EventLoop extends Application {
         });
 
 
-        VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4, hbox5, hbox6, hbox7, hbox8, hbox9);
+        VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4, hbox5, hbox6, hbox7, hbox8, hbox9, hbox10);
 
         Scene scene = new Scene(vbox, 600, 400);
 
@@ -372,6 +407,7 @@ public class EventLoop extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     public static void main(String[] args) {
