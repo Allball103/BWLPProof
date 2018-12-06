@@ -37,10 +37,20 @@ public class EventLoop extends Application {
     //keeps track of the current time at the store
     double CurrentTime = 0;
     PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>((c1,c2) -> {
-        if(c1.getFinishTime() < c2.getFinishTime()){
+        if(c1.getFinishTime() == c2.getFinishTime()){
+            if(c1.getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT){
+                return -1;
+            } else if(c2.getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT){
+                return 1;
+            } else if(c1.getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT){
+                return -1;
+            } else if(c2.getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT){
+                return 1;
+            } else {
+                return 0;
+            }
+        } else if(c1.getFinishTime() < c2.getFinishTime()) {
             return -1;
-        } if(c1.getFinishTime() == c2.getFinishTime()) {
-            return 0;
         } else {
             return 1;
         }
