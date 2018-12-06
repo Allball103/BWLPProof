@@ -170,6 +170,7 @@ public class EventLoop extends Application {
                     store.cashierCreator(1);
                     break;
                 case 2:
+
                     store.setNumCashiers(2);
                     store.cashierCreator(2);
                     break;
@@ -311,6 +312,7 @@ public class EventLoop extends Application {
                             pQueue.add(c);
                             System.out.println("Transitioned Customer " + c.getId());
                         } else{
+                            pQueue.add(c);
                             System.out.println("CUSTOMER SHOULD NEVER BE HERE " + c.getId());
                         }
                     //Customer finishes at the cashier and leaves the store.

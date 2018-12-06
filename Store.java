@@ -48,13 +48,18 @@ public class Store{
 
     //customer joins the airport line
     public void joinLine(Customer c){
-        //choose which line customer c joins
-        airportLine.add(c);
+        //customer c joins airport line
+        if (airportLine.isEmpty()) {
+            airportLine.add(0, c);
+        } else {
+        airportLine.add(airportLine.size() - 1, c);
+        }
     }
 
     //customer leaves lines
     public void leaveLine(){
         airportLine.remove(0);
+        airportLine.trimToSize();
     }
 
     //I'm gonna be honest i have no idea what this does but it's what he gave us

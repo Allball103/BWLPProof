@@ -9,9 +9,6 @@ public class Cashier{
         timeAvailable = 0;
     }
 
-    // The people who this cashier will be checking out
-    private ArrayList<Customer> futureCheckouts = new ArrayList<>();
-
     // How fast the cashier can check out items
     int checkOutSpeed;
 
@@ -22,8 +19,6 @@ public class Cashier{
     private double timeAvailable;
 
     // Getters
-    ArrayList<Customer> getFutureCheckouts() {return futureCheckouts; }
-
     int getCheckOutSpeed(){
         return checkOutSpeed;
     }
@@ -35,8 +30,6 @@ public class Cashier{
     double getTimeAvailable() {return timeAvailable; }
 
     // Setters
-    public void setFutureCheckouts(ArrayList<Customer> futureCheckouts) {this.futureCheckouts = futureCheckouts; }
-
     public void setCheckOutSpeed(int checkOutSpeed) {
         this.checkOutSpeed = checkOutSpeed;
     }
@@ -52,15 +45,6 @@ public class Cashier{
         //stretch goal; different items will have different check out speeds
         int time = c.itemsInCart * checkOutSpeed;
         return time;
-    }
-
-    // calculate how long their future line will take to checkout
-    public int checkoutAllLine(Customer c){
-        int finishTime = 0;
-        for (int i = 0; i < futureCheckouts.size(); i++) {
-            finishTime += futureCheckouts.get(i).itemsInCart*checkOutSpeed;
-        }
-        return finishTime;
     }
 
 }
