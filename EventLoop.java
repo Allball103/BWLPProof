@@ -232,11 +232,6 @@ public class EventLoop extends Application {
             //System.out.println(df.format(CurrentTime));
             //prints current time
             System.out.println("Current Time: "+ df.format(CurrentTime));
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             custLabel.setText(Integer.toString(custCount) + " customers currently in store");
             airportLabel.setText(Integer.toString(store.getAirportLine().size()) + " customers currently in airport line");
