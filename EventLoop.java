@@ -282,7 +282,8 @@ public class EventLoop extends Application {
         }
         comboBoxItems.getSelectionModel().selectFirst();
 
-        Label labelDivider = new Label("---------------------------------------------------");
+        Label labelDivider1 = new Label("---------------------------------------------------");
+        Label labelDivider2 = new Label("---------------------------------------------------");
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -295,14 +296,12 @@ public class EventLoop extends Application {
         HBox hbox2 = new HBox(labelArrive, comboBoxArrive);
         HBox hbox3 = new HBox(labelItems, comboBoxItems);
         HBox hbox4 = new HBox(labelTime, comboBoxTime);
-        HBox hbox5 = new HBox(labelDivider);
+        HBox hbox5 = new HBox(labelDivider1);
         HBox hbox6 = new HBox(buttonStart, buttonStop);
-        HBox hbox7 = new HBox(labelDivider);
+        HBox hbox7 = new HBox(labelDivider2);
         HBox hbox8 = new HBox(custLabel);
         HBox hbox9 = new HBox(airportLabel);
         HBox hbox10 = new HBox(processedLabel);
-
-
 
 
         hbox1.setAlignment(Pos.CENTER);
@@ -375,7 +374,7 @@ public class EventLoop extends Application {
 
         VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4, hbox5, hbox6, hbox7, hbox8, hbox9, hbox10);
 
-        Scene scene = new Scene(vbox, 600, 400);
+        Scene scene = new Scene(vbox, 300, 250);
 
 
         /////////////////////////////////////////////////////////////////////
