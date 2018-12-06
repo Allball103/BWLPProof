@@ -288,7 +288,7 @@ public class EventLoop extends Application {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         Button buttonStart = new Button("Start Simulation");
-        Button buttonStop = new Button("Stop Simulation");
+        Button buttonStop = new Button("Stop Simulation / Reset");
 
 
         HBox hbox1 = new HBox(labelCash, comboBoxCash);
@@ -299,8 +299,9 @@ public class EventLoop extends Application {
         HBox hbox6 = new HBox(buttonStart, buttonStop);
         HBox hbox7 = new HBox(labelDivider);
         HBox hbox8 = new HBox(custLabel);
-        HBox hbox9 = new HBox(processedLabel);
-        HBox hbox10 = new HBox(airportLabel);
+        HBox hbox9 = new HBox(airportLabel);
+        HBox hbox10 = new HBox(processedLabel);
+
 
 
 
@@ -361,6 +362,14 @@ public class EventLoop extends Application {
         buttonStop.setOnAction(actionEvent -> {
             start = false;
             custCount = 0;
+            custProcessed = 0;
+            pQueue.clear();
+            store.getAirportLine().clear();
+
+            custLabel.setText(Integer.toString(custCount) + " customers currently in store");
+            airportLabel.setText(Integer.toString(store.getAirportLine().size()) + " customers currently in airport line");
+            processedLabel.setText(Integer.toString(custProcessed) + " customers processed");
+
         });
 
 
