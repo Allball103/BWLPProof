@@ -37,15 +37,15 @@ public class EventLoop extends Application {
     //keeps track of the current time at the store
     double CurrentTime = 0;
     PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>((c1,c2) -> {
-        if(c1.getFinishTime() == c2.getFinishTime()){
+        if(Math.abs(c1.getFinishTime() - c2.getFinishTime()) < .0001){
             if(c1.getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT){
-                return -1;
+                return 1;
             } else if(c2.getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT){
-                return 1;
-            } else if(c1.getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT){
                 return -1;
-            } else if(c2.getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT){
+            } else if(c1.getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT){
                 return 1;
+            } else if(c2.getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT){
+                return -1;
             } else {
                 return 0;
             }
@@ -267,10 +267,10 @@ public class EventLoop extends Application {
                             }
                             //Set the customer's finish time to the lowest cashier availability,
                             //AND set that cashier's availability time to after that customer will be done.
-                            if(lowest < (20- c.impatienceFactor) + CurrentTime) {
+                            if(lowest < (10- c.impatienceFactor) + CurrentTime) {
                                 c.setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
-                                c.setFinishTime(lowest);
-                                store.getCashiers()[cNum].setTimeAvailable(lowest + store.getCashiers()[cNum].checkout(c));
+                                c.setFinishTime(lowest +0.01);
+                                store.getCashiers()[cNum].setTimeAvailable(lowest +0.01+ store.getCashiers()[cNum].checkout(c));
                                 store.joinLine(c);
                                 pQueue.add(c);
                                 System.out.println("Customer " + c.getId() + " ready for checkout 2");
@@ -313,7 +313,7 @@ public class EventLoop extends Application {
                             System.out.println("Transitioned Customer " + c.getId());
                         } else{
                             pQueue.add(c);
-                            System.out.println("CUSTOMER SHOULD NEVER BE HERE " + c.getId());
+                            System.out.println("Transitioned Customer! " + c.getId());
                         }
                     //Customer finishes at the cashier and leaves the store.
                     } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
