@@ -276,7 +276,7 @@ public class EventLoop extends Application {
                                 System.out.println("Customer " + c.getId() + " ready for checkout 2");
                             } else {
                                 c.setCurrentEvent(Event.CUSTOMER_ABANDONS_LINE);
-                                c.setFinishTime((20 - c.impatienceFactor) + CurrentTime);
+                                c.setFinishTime((10 - c.impatienceFactor) + CurrentTime);
                                 store.joinLine(c);
                                 pQueue.add(c);
                                 System.out.println("Customer " + c.getId() + " prepares to leave line");
@@ -312,8 +312,10 @@ public class EventLoop extends Application {
                             pQueue.add(c);
                             System.out.println("Transitioned Customer " + c.getId());
                         } else{
-                            pQueue.add(c);
-                            System.out.println("Transitioned Customer! " + c.getId());
+                            //This is the "dumb" abandon line, where the customer waits a long time before getting
+                            //frustrated and leaving because it took too long
+                            //pQueue.add(c);
+                            System.out.println("Customer "+ c.getId()+" abandons the line and leaves the store.");
                         }
                     //Customer finishes at the cashier and leaves the store.
                     } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
@@ -325,11 +327,12 @@ public class EventLoop extends Application {
                         //error handling code
                         System.out.println("Customer " + c.getId() + " checked out and left store");
                     //Customer abandons line due to impatience and leaves the store.
-                    //Currently does nothing....
+                    //This is the "smart" abandon line, where the customer decides they're going to leave the line
+                    //far in advance.
                     } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ABANDONS_LINE) {
                         CurrentTime = pQueue.peek().getFinishTime();
                         Customer c = pQueue.poll();
-                        System.out.println("Customer " + c.getId() +  " peaces out");
+                        System.out.println("Customer "+ c.getId()+" abandons the line and leaves the store");
 
                     }
                     DecimalFormat df = new DecimalFormat();
