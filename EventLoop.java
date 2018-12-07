@@ -209,11 +209,11 @@ public class EventLoop extends Application {
                         store.getCheckingOut()[i] = c;
                         store.getCashiers()[i].setAvailable(false);
                         if(i == 0){
-                            atCashier1 = "is with a customer";
+                            atCashier1 = "is with customer " + store.getCheckingOut()[i].getId();
                         } else if(i ==1){
-                            atCashier2 = "is with a customer";
+                            atCashier2 = "is with customer " + store.getCheckingOut()[i].getId();
                         } else if(i ==2){
-                            atCashier3 = "is with a customer";
+                            atCashier3 = "is with customer " + store.getCheckingOut()[i].getId();
                         }
                         store.leaveLine();
                         c.setRegisterNum(i);
