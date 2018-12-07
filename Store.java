@@ -62,7 +62,7 @@ public class Store{
         airportLine.trimToSize();
     }
 
-    //I'm gonna be honest i have no idea what this does but it's what he gave us
+    // Deterimes the distribution of customers in the Store
     public double customerDistribution(int chance){
         double u,x;
         u = (Math.random());

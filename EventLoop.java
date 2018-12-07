@@ -136,6 +136,7 @@ public class EventLoop extends Application {
 
             firstTime = false;
 
+            //MAIN EVENT LOGIC - Liam, Bill, Will
             //This event is for when the customer is going to arrive in the store.
             //There will always be exactly one of these events in the queue, as it creates itself.
             //After a customer arrives, creates a customer arrives in store event w/ that customer
@@ -316,6 +317,7 @@ public class EventLoop extends Application {
         }
     }
 
+    // More of the GUI logic to make things run - Phil, Liam
     @Override
     public void start(Stage primaryStage) {
 
