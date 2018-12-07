@@ -79,11 +79,17 @@ public class EventLoop extends Application {
     // start with 0 customers in store and processed in store for GUI label
     private int custProcessed = 0;
     private int custCount = 0;
-
+    // statement about whether someone's at the register or not
+    private String atCashier1 = "is not initialized";
+    private String atCashier2 = "is not initialized";
+    private String atCashier3 = "is not initialized";
 
     private final Label custLabel = new Label(Integer.toString(custCount) + " customers currently in store");
     private final Label airportLabel = new Label(" 0 customers currently in airport line");
     private final Label processedLabel = new Label(Integer.toString(custProcessed) + " customers processed");
+    private final Label cashier1Label = new Label("Cashier 1 "+atCashier1+".");
+    private final Label cashier2Label = new Label("Cashier 2 "+atCashier2+".");
+    private final Label cashier3Label = new Label("Cashier 3 "+atCashier3+".");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,6 +101,21 @@ public class EventLoop extends Application {
                 System.out.println("Arrival Int: " + arrivalNumber);
                 System.out.println("Items Int: " + itemsNumber);
                 System.out.println("Cashiers: " + cashierNum);
+
+                //Update GUI message based on number of cashiers
+                if(cashierNum == 1){
+                    atCashier1 = "is available";
+                    cashier2Label.setDisable(true);
+                    cashier3Label.setDisable(true);
+                } else if(cashierNum == 2){
+                    atCashier1 = "is available";
+                    atCashier2 = "is available";
+                    cashier3Label.setDisable(true);
+                } else if(cashierNum >= 3) {
+                    atCashier1 = "is available";
+                    atCashier2 = "is available";
+                    atCashier3 = "is available";
+                }
             }
 
             firstTime = false;
@@ -187,6 +208,13 @@ public class EventLoop extends Application {
                     if (store.getCashiers()[i].available && notInLine) {
                         store.getCheckingOut()[i] = c;
                         store.getCashiers()[i].setAvailable(false);
+                        if(i == 0){
+                            atCashier1 = "is with a customer";
+                        } else if(i ==1){
+                            atCashier2 = "is with a customer";
+                        } else if(i ==2){
+                            atCashier3 = "is with a customer";
+                        }
                         store.leaveLine();
                         c.setRegisterNum(i);
                         notInLine = false;
@@ -214,6 +242,13 @@ public class EventLoop extends Application {
                 // should maybe add try catch
                 store.getCheckingOut()[c.getRegisterNum()] = null;
                 store.getCashiers()[c.getRegisterNum()].setAvailable(true);
+                if(c.getRegisterNum() == 0){
+                    atCashier1 = "is available";
+                } else if(c.getRegisterNum() == 1){
+                    atCashier2 = "is available";
+                } else if(c.getRegisterNum() == 2){
+                    atCashier3 = "is available";
+                }
                 //error handling code
                 System.out.println("Customer " + c.getId() + " checked out and left store");
                 custProcessed += 1;
@@ -236,6 +271,13 @@ public class EventLoop extends Application {
             custLabel.setText(Integer.toString(custCount) + " customers currently in store");
             airportLabel.setText(Integer.toString(store.getAirportLine().size()) + " customers currently in airport line");
             processedLabel.setText(Integer.toString(custProcessed) + " customers processed");
+            cashier1Label.setText("Cashier 1 "+atCashier1+".");
+            if(store.getNumCashiers() >= 2) {
+                cashier2Label.setText("Cashier 2 " + atCashier2 + ".");
+            }
+            if(store.getNumCashiers() == 3) {
+                cashier3Label.setText("Cashier 3 "+atCashier3+".");
+            }
 
         }
     }
@@ -302,6 +344,9 @@ public class EventLoop extends Application {
         HBox hbox8 = new HBox(custLabel);
         HBox hbox9 = new HBox(airportLabel);
         HBox hbox10 = new HBox(processedLabel);
+        HBox hbox11 = new HBox(cashier1Label);
+        HBox hbox12 = new HBox(cashier2Label);
+        HBox hbox13 = new HBox(cashier3Label);
 
 
         hbox1.setAlignment(Pos.CENTER);
@@ -314,7 +359,9 @@ public class EventLoop extends Application {
         hbox8.setAlignment(Pos.CENTER);
         hbox9.setAlignment(Pos.CENTER);
         hbox10.setAlignment(Pos.CENTER);
-
+        hbox11.setAlignment(Pos.CENTER);
+        hbox12.setAlignment(Pos.CENTER);
+        hbox13.setAlignment(Pos.CENTER);
 
         buttonStart.setOnAction(actionEvent -> {
 
@@ -362,17 +409,21 @@ public class EventLoop extends Application {
             start = false;
             custCount = 0;
             custProcessed = 0;
+
             pQueue.clear();
             store.getAirportLine().clear();
 
             custLabel.setText(Integer.toString(custCount) + " customers currently in store");
             airportLabel.setText(Integer.toString(store.getAirportLine().size()) + " customers currently in airport line");
             processedLabel.setText(Integer.toString(custProcessed) + " customers processed");
+            cashier1Label.setText("Cashier 1 "+atCashier1+".");
+            cashier2Label.setText("Cashier 2 "+atCashier2+".");
+            cashier3Label.setText("Cashier 3 "+atCashier3+".");
 
         });
 
 
-        VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4, hbox5, hbox6, hbox7, hbox8, hbox9, hbox10);
+        VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4, hbox5, hbox6, hbox7, hbox8, hbox9, hbox10, hbox11, hbox12, hbox13);
 
         Scene scene = new Scene(vbox, 300, 250);
 
