@@ -27,17 +27,29 @@ import java.text.DecimalFormat;
 import java.util.PriorityQueue;
 import java.util.Random;
 
+
+
+/*
+    Event Loop Class. Where simulation logic lives
+    Contributers: Bill, Liam, Phil, and Will
+ */
 public class EventLoop extends Application {
 
+    // Creates enum for the possible events to be happening in the priority queue.
     enum Event
     {
         CUSTOMER_SPAWNS, CUSTOMER_ARRIVES_IN_STORE, CUSTOMER_READY_FOR_CHECKOUT, CUSTOMER_FINISHES_CHECKOUT, CUSTOMER_ABANDONS_LINE;
     }
 
+    // Initializing the current time for the simulation.
     double CurrentTime = 0;
 
+    // Initalizing the priority queue.
+    // Logic for the priority queue - Will
     PriorityQueue<Customer> pQueue = new PriorityQueue<Customer>((c1,c2) -> {
+        //Making the comparable for the class the finish times for the customers
         if(Math.abs(c1.getFinishTime() - c2.getFinishTime()) < .0001){
+            //Secondary comparison for the event to be handeled first. Which gets priority.
             if(c1.getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT){
                 return 1;
             } else if(c2.getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT){
@@ -54,10 +66,12 @@ public class EventLoop extends Application {
         } else {
             return 1;
         }
-    }); //need to make a comparable by the time the event will finish for the given customer
+    });
 
+    // Create the store object for the simulation.
     private Store store;
 
+    // Creates all of the attributes to be prompted for in the GUI
     int arrivalNumber;
     int itemsNumber;
     int cashierNum;
@@ -66,12 +80,12 @@ public class EventLoop extends Application {
     double doubleDist;
     double items;
 
-    //casting is a problem here; need to somehow remove decimal points without rounding or something?
-    //int dist = (int) doubleDist;
-
     int custIdCounter;
 
     boolean firstTime = true;
+
+
+    // Initial GUI Logic - Phil
 
     // Flag that is switched when the user clicks START to enter the simulation while loop
     private boolean start = false;
@@ -92,6 +106,8 @@ public class EventLoop extends Application {
     private final Label cashier3Label = new Label("Cashier 3 "+atCashier3+".");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Starts the Thread for the simulation.
 
     private void simulationThread() {
 
@@ -126,6 +142,7 @@ public class EventLoop extends Application {
             if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_SPAWNS) {
                 //Set current store time to the Finish Time of the next event
                 CurrentTime = pQueue.peek().getFinishTime();
+
                 //Create a new customer that arrives at store
                 Customer c = pQueue.poll();
                 c.setCurrentEvent(Event.CUSTOMER_ARRIVES_IN_STORE);
@@ -133,21 +150,27 @@ public class EventLoop extends Application {
                 pQueue.add(c);
                 System.out.println("Added a new Customer with ID: " + c.getId());
                 custCount += 1;
+
                 //Also must figure out when the next customer spawns.
                 doubleDist = store.customerDistribution(arrivalNumber);
                 items = store.customerDistribution(arrivalNumber);
-                // customer id
+
+                // Customer ID is then incremented for when the next customer is created
                 custIdCounter+=1;
-                //customer defaults to customer spawns event
+
+                //Customer defaults to customer spawns event when initially created
                 Customer c2 = new Customer(CurrentTime, doubleDist, items, custIdCounter);
                 pQueue.add(c2);
+
                 //This is the event for the customer wandering around the store before getting in line.
-                //Creates a ready for checkout class when they get in line
+                //Creates a ready for checkout class when they get in line and calculates the finish time for this event
             } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_ARRIVES_IN_STORE) {
                 //Set current store time to the Finish Time of the next event
                 CurrentTime = pQueue.peek().getFinishTime();
+
                 //Create a new customer that's ready for checkout
                 Customer c = pQueue.poll();
+
                 //Set finish time based on when a cashier will be ready
                 boolean openCashier = false;
                 for (int i = 0; i < (store.getNumCashiers()); i++) {
@@ -155,27 +178,30 @@ public class EventLoop extends Application {
                         openCashier = true;
                     }
                 }
+
                 //If there's a cashier open, go right to them! Otherwise, find the closest time available.
                 if(openCashier == true) {
                     c.setFinishTime(CurrentTime);
                     store.joinLine(c);
                     c.setCurrentEvent(Event.CUSTOMER_READY_FOR_CHECKOUT);
                     pQueue.add(c);
-                    System.out.println("Customer" + c.getId() + " ready for checkout 1");
-                } else {
+                    System.out.println("Customer" + c.getId() + " ready for checkout");
+                }
+                else {
                     //Need to determine when there will be an empty register.
                     //Default to the first cashier as the lowest
                     double lowest = store.getCashiers()[0].getTimeAvailable();
                     int cNum = 0;
+
                     //If there's multiple cashiers, find the lowest time
                     for (int i = 1; i < store.getNumCashiers() ; i++) {
                         System.out.println(store.getNumCashiers());
-                        //System.out.println("hey y'all");
                         if (store.getCashiers()[i].getTimeAvailable() < lowest) {
                             lowest = store.getCashiers()[i].getTimeAvailable();
                             cNum = i;
                         }
                     }
+
                     //Set the customer's finish time to the lowest cashier availability,
                     //AND set that cashier's availability time to after that customer will be done.
                     if(lowest < (10- c.impatienceFactor) + CurrentTime) {
@@ -185,7 +211,9 @@ public class EventLoop extends Application {
                         store.joinLine(c);
                         pQueue.add(c);
                         System.out.println("Customer " + c.getId() + " ready for checkout 2");
-                    } else {
+                    }
+                    else {
+                        // Logic for the customer abandoning the line
                         c.setCurrentEvent(Event.CUSTOMER_ABANDONS_LINE);
                         c.setFinishTime((10 - c.impatienceFactor) + CurrentTime);
                         store.joinLine(c);
@@ -200,6 +228,7 @@ public class EventLoop extends Application {
             } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_READY_FOR_CHECKOUT) {
                 //Set current store time to the Finish Time of the next event
                 CurrentTime = pQueue.peek().getFinishTime();
+
                 //Create a new customer that's ready to go to a cashier
                 Customer c = pQueue.poll();
                 c.setCurrentEvent(Event.CUSTOMER_FINISHES_CHECKOUT);
@@ -220,10 +249,12 @@ public class EventLoop extends Application {
                         notInLine = false;
                     }
                 }
+
                 // This is for if the customer got into the cashiers line because they are available
                 if(!notInLine){
                     //Set customer finish time based on current time and the checkout cashier method
                     c.setFinishTime(CurrentTime + store.getCashiers()[c.getRegisterNum()].checkout(c));
+
                     //Set cashier time available to this customer finish time
                     store.getCashiers()[c.getRegisterNum()].setTimeAvailable(c.getFinishTime());
                     pQueue.add(c);
@@ -235,11 +266,13 @@ public class EventLoop extends Application {
                     System.out.println("Customer "+ c.getId()+" abandons the line and leaves the store.");
                     custCount -= 1;
                 }
-                //Customer finishes at the cashier and leaves the store.
+
+                // Customer finishes at the cashier and leaves the store.
+                // Remove the customer from the priority queue, make the cashier they were just with
+                // available again, and handle any errors with this process
             } else if (pQueue.peek().getCurrentEvent() == Event.CUSTOMER_FINISHES_CHECKOUT) {
                 CurrentTime = pQueue.peek().getFinishTime();
                 Customer c = pQueue.poll();
-                // should maybe add try catch
                 store.getCheckingOut()[c.getRegisterNum()] = null;
                 store.getCashiers()[c.getRegisterNum()].setAvailable(true);
                 if(c.getRegisterNum() == 0){
@@ -249,7 +282,7 @@ public class EventLoop extends Application {
                 } else if(c.getRegisterNum() == 2){
                     atCashier3 = "is available";
                 }
-                //error handling code
+                //Error handling code
                 System.out.println("Customer " + c.getId() + " checked out and left store");
                 custProcessed += 1;
                 custCount -= 1;
@@ -262,12 +295,13 @@ public class EventLoop extends Application {
                 System.out.println("Customer "+ c.getId()+" abandons the line and leaves the store");
                 custCount -= 1;
             }
+            // Setting the time to be in decimal format due to the customer distribution being in decimal form
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(2);
-            //System.out.println(df.format(CurrentTime));
             //prints current time
             System.out.println("Current Time: "+ df.format(CurrentTime));
 
+            //Reflect these things in the GUI
             custLabel.setText(Integer.toString(custCount) + " customers currently in store");
             airportLabel.setText(Integer.toString(store.getAirportLine().size()) + " customers currently in airport line");
             processedLabel.setText(Integer.toString(custProcessed) + " customers processed");
