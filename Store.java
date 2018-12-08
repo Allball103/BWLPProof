@@ -1,3 +1,10 @@
+/*
+Store Class
+Class Contributors: Will, Liam
+ */
+
+
+
 import java.util.ArrayList;
 
 // Defines the Store class

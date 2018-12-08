@@ -31,7 +31,7 @@ import java.util.Random;
 
 /*
     Event Loop Class. Where simulation logic lives
-    Contributers: Bill, Liam, Phil, and Will
+    Contributors: Bill, Liam, Phil, and Will
  */
 public class EventLoop extends Application {
 

@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 
+/*
+Cashier Class
+Class Contributers: Will, Bill
+ */
+
+
 // Defines the Cashier class
 public class Cashier{
 

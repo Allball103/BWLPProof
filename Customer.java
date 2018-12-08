@@ -1,3 +1,9 @@
+/*
+Customer Class
+Class Contributors: Liam, Bill
+ */
+
+
 // Defines the Customer class
 public class Customer{
 
