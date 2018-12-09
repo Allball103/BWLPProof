@@ -102,20 +102,6 @@ public class EventLoop extends Application {
                 System.out.println("Items Int: " + itemsNumber);
                 System.out.println("Cashiers: " + cashierNum);
 
-                //Update GUI message based on number of cashiers
-                if(cashierNum == 1){
-                    atCashier1 = "is available";
-                    cashier2Label.setDisable(true);
-                    cashier3Label.setDisable(true);
-                } else if(cashierNum == 2){
-                    atCashier1 = "is available";
-                    atCashier2 = "is available";
-                    cashier3Label.setDisable(true);
-                } else if(cashierNum >= 3) {
-                    atCashier1 = "is available";
-                    atCashier2 = "is available";
-                    atCashier3 = "is available";
-                }
             }
 
             firstTime = false;
@@ -368,6 +354,15 @@ public class EventLoop extends Application {
             // Initialize our store
             store = new Store();
 
+            atCashier1 = "is not initialized";
+            atCashier2 = "is not initialized";
+            atCashier3 = "is not initialized";
+
+            cashier1Label.setText("Cashier 1 "+atCashier1+".");
+            cashier2Label.setText("Cashier 2 "+atCashier2+".");
+            cashier3Label.setText("Cashier 3 "+atCashier3+".");
+
+
             //sets simulation parameters based on dropdown selections after user has clicked start
             arrivalNumber = (int)comboBoxArrive.getValue();
             itemsNumber = (int)comboBoxItems.getValue();
@@ -394,6 +389,21 @@ public class EventLoop extends Application {
                     break;
             }
 
+            //Update GUI message based on number of cashiers
+            if(cashierNum == 1){
+                atCashier1 = "is available";
+                cashier2Label.setDisable(true);
+                cashier3Label.setDisable(true);
+            } else if(cashierNum == 2){
+                atCashier1 = "is available";
+                atCashier2 = "is available";
+                cashier3Label.setDisable(true);
+            } else if(cashierNum >= 3) {
+                atCashier1 = "is available";
+                atCashier2 = "is available";
+                atCashier3 = "is available";
+            }
+
             // sets our customer counter to start at 1
             custIdCounter = 1;
 
@@ -410,6 +420,10 @@ public class EventLoop extends Application {
             custCount = 0;
             custProcessed = 0;
 
+            atCashier1 = "is not initialized";
+            atCashier2 = "is not initialized";
+            atCashier3 = "is not initialized";
+
             pQueue.clear();
             store.getAirportLine().clear();
 
@@ -420,13 +434,18 @@ public class EventLoop extends Application {
             cashier2Label.setText("Cashier 2 "+atCashier2+".");
             cashier3Label.setText("Cashier 3 "+atCashier3+".");
 
-        });
+            cashier1Label.setDisable(false);
+            cashier2Label.setDisable(false);
+            cashier3Label.setDisable(false);
 
+
+
+
+        });
 
         VBox vbox = new VBox(hbox1, hbox2, hbox3, hbox4, hbox5, hbox6, hbox7, hbox8, hbox9, hbox10, hbox11, hbox12, hbox13);
 
-        Scene scene = new Scene(vbox, 300, 250);
-
+        Scene scene = new Scene(vbox, 300, 300);
 
         /////////////////////////////////////////////////////////////////////
 
