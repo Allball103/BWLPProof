@@ -1,1 +1,1 @@
-# BWLPProof (I Love Sardines)
+# BWLPProof
